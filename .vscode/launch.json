@@ -8,8 +8,8 @@
       "program": "${file}",
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
-      "envFile": "${workspaceFolder}/.env",
-      "justMyCode": true
+      "env": {"PYTHONPATH": "${workspaceFolder}"},
+      "justMyCode": true      
     }
   ]
 }

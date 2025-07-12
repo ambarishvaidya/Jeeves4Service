@@ -1,0 +1,15 @@
+{
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/services/shared",
+    "${workspaceFolder}/services/shared/j4s_logging_lib"
+  ],
+  "python.analysis.indexing": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.exclude": [
+        "**/__pycache__/**",
+        "**/.venv/**",
+        "**/.git/**",
+        "**/*.egg-info/**"
+    ],
+  "python.analysis.diagnosticMode": "workspace" 
+}
