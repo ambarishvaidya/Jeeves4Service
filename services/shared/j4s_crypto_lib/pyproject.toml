@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "j4s_crypto_lib"
+version = "1.0.0"
+description = "Versatile library offering reusable components for data encoding, decoding, encryption, and decryption."
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]
