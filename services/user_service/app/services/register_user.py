@@ -15,8 +15,9 @@ import string
 
 # ...existing code...
 
-def register_user(request: RegisterUserRequest, session: SessionLocal, logger) -> RegisterUserResponse:
-    #logger = logger(__name__)
+def register_user(request: RegisterUserRequest, session: SessionLocal, logger = None) -> RegisterUserResponse:
+    
+    logger = logger(__name__) if logger is None else logger
         
     try:
         logger.info(f"Starting user registration for email: {request.email}")
