@@ -15,7 +15,7 @@ from services.shared.j4s_logging_lib.j4s_logger import configure_logging
 # logs_directory = os.path.join(project_root, 'logs')
 
 # Configure the logger using the shared library, providing the required logs_base_dir
-logger = configure_logging(service_name="user_service", log_level=logging.INFO, logs_base_dir=f".")
+logger = configure_logging(logger_name="user_service", log_level=logging.INFO, logs_base_dir=f".")
 
 if __name__ == "__main__":
     logger.info("This is a test message from core/logger.py, confirming log setup.")
