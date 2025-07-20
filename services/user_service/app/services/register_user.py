@@ -4,7 +4,7 @@ from pydantic import BaseModel, EmailStr
 from datetime import date
 from services.user_service.app.dto.registration import RegisterUserRequest, RegisterUserResponse
 from services.user_service.app.dto.user import AddUserRequest
-from services.user_service.app.models.user import User
+from services.user_service.app.models.user import User, UserPassword
 from services.user_service.app.models.family import Family
 import uuid
 import secrets
@@ -42,6 +42,14 @@ class RegisterUserService:
             
             self.session.add(main_user)
             self.session.flush()  # To get the user ID
+            
+            # Create UserPassword entry for main user (for testing/debugging purposes)
+            main_user_password = UserPassword(
+                user_id=main_user.id,
+                email=main_user.email,
+                password_str=request.password  # Store original password (only for testing!)
+            )
+            self.session.add(main_user_password)
             
             self.logger.info(f"Created main user with ID: {main_user.id}")
             
@@ -84,6 +92,14 @@ class RegisterUserService:
                         
                         self.session.add(user)
                         self.session.flush()
+                        
+                        # Create UserPassword entry for additional user (for testing/debugging purposes)
+                        additional_user_password = UserPassword(
+                            user_id=user.id,
+                            email=user.email,
+                            password_str=dynamic_password  # Store the generated password (only for testing!)
+                        )
+                        self.session.add(additional_user_password)
                         
                         self.logger.info(f"Created additional user with ID: {user.id}, dynamic password: {dynamic_password}")
                         

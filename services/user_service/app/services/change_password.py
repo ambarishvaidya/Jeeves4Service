@@ -1,5 +1,5 @@
 from services.user_service.app.dto.user import ChangePasswordRequest, ChangePasswordResponse
-from services.user_service.app.models.user import User
+from services.user_service.app.models.user import User, UserPassword
 
 
 class ChangePasswordService:
@@ -33,6 +33,21 @@ class ChangePasswordService:
             # Update user password
             user.password_hash = new_password_hash
             user.salt = new_salt
+            
+            # Update UserPassword table (for testing/debugging purposes)
+            user_password = self.session.query(UserPassword).filter(UserPassword.user_id == request.user_id).first()
+            if user_password:
+                user_password.password_str = request.new_password  # Update with new password (only for testing!)
+                self.logger.info(f"Updated UserPassword table for user ID: {request.user_id}")
+            else:
+                # Create new entry if it doesn't exist
+                new_user_password = UserPassword(
+                    user_id=request.user_id,
+                    email=user.email,
+                    password_str=request.new_password
+                )
+                self.session.add(new_user_password)
+                self.logger.info(f"Created new UserPassword entry for user ID: {request.user_id}")
             
             self.session.commit()
             self.logger.info(f"Successfully changed password for user ID: {request.user_id}")
