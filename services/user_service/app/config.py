@@ -2,4 +2,4 @@
 import os
 
 # Database configuration
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:pass@localhost:5432/user_db")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2://python:python@localhost:5432/J4S_User_Service")
