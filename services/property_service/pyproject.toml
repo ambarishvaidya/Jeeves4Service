@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "property-service"
+version = "0.1.0"
+description = "Property Service Application"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "sqlalchemy",
+    "alembic",
+    "psycopg2-binary",
+    "fastapi",
+    "uvicorn",
+    "python-dotenv",
+    "dependency-injector",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "black",
+    "flake8",
+    "mypy",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+exclude = ["tests*", "alembic*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.ini", "*.cfg", "*.yaml", "*.yml"]
