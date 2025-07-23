@@ -54,7 +54,7 @@ class RegisterUserService:
             self.logger.info(f"Created main user with ID: {main_user.id}")
             
             # Generate unique family UUID
-            family_uuid = str(uuid.uuid4())
+            family_uuid = uuid.uuid4().bytes
             self.logger.info(f"Generated family UUID: {family_uuid}")
 
             # Create family entry for main user
@@ -114,6 +114,7 @@ class RegisterUserService:
                     except IntegrityError as e:
                         self.logger.error(f"Integrity error for additional user {additional_user.email}: {str(e)}")
                     
+            
             
             self.session.commit()
             self.logger.info(f"Successfully registered user and family with UUID: {family_uuid}")
