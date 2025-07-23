@@ -6,6 +6,7 @@ class AddUserRequest(BaseModel):
     last_name: str
     email: EmailStr
     password: str
+    dob: date
     is_admin: bool = False
 
 class ChangePasswordRequest(BaseModel):
