@@ -1,6 +1,11 @@
 from pydantic import BaseModel, EmailStr
 from datetime import date
 
+class InviteUser(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr    
+
 class AddUserRequest(BaseModel):
     first_name: str
     last_name: str
