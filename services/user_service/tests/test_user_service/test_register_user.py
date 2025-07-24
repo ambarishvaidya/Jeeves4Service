@@ -200,8 +200,7 @@ class TestRegisterUserService:
             last_name="Doe",
             email="test@example.com",
             password="SecurePass123!",
-            dob=date(1990, 1, 1),
-            additional_users=[]
+            dob=date(1990, 1, 1)            
         )
         
         # Act
