@@ -7,8 +7,7 @@ class RegisterUserRequest(BaseModel):
     last_name: str
     email: EmailStr
     password: str
-    dob: date
-    additional_users: list[AddUserRequest] = [] 
+    dob: date    
 
 class RegisterUserResponse(BaseModel):
     user_id: int
