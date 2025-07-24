@@ -30,6 +30,10 @@ class UpdateUserService:
             
             return {"user_id": user_id, "message": "User updated successfully"}
             
+        except ValueError as ve:
+            # ValueError exceptions are already logged above, just re-raise
+            raise ve
+            
         except Exception as e:
             self.session.rollback()
             self.logger.error(f"Error during user update: {str(e)}")
