@@ -48,6 +48,16 @@ class Container(containers.DeclarativeContainer):
         crypto_hash_service=crypto_hash_service
     )
     
+    authenticate_user_service = providers.Factory(
+        "services.user_service.app.services.authenticate_user.AuthenticateUser",
+        logger=providers.Factory(
+            LoggerFactory.create_logger_for,
+            logger_name="AuthenticateUserService"
+        ),
+        session=db_session,
+        crypto_service=crypto_verify_service
+    )
+
     activate_deactivate_user_service = providers.Factory(
         "services.user_service.app.services.activate_deactivate_user.ActivateDeactivateUserService",
         logger=providers.Factory(
@@ -98,6 +108,16 @@ class Container(containers.DeclarativeContainer):
         session=db_session
     )
 
+    invite_user_service = providers.Factory(
+        "services.user_service.app.services.invite_user.InviteUserService",
+        logger=providers.Factory(
+            LoggerFactory.create_logger_for,
+            logger_name="InviteUserService"
+        ),
+        session=db_session,
+        crypto_hash_service=crypto_hash_service
+    )
+
 
 # Service factory for easy access
 class ServiceFactory:
@@ -141,3 +161,13 @@ class ServiceFactory:
     def get_update_user_service(cls):
         """Get UpdateUserService instance"""
         return cls.get_container().update_user_service()
+    
+    @classmethod
+    def get_authenticate_user_service(cls):
+        """Get AuthenticateUserService instance"""
+        return cls.get_container().authenticate_user_service()
+
+    @classmethod
+    def get_invite_user_service(cls):
+        """Get InviteUserService instance"""
+        return cls.get_container().invite_user_service()

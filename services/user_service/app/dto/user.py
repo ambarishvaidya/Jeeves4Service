@@ -1,6 +1,11 @@
 from pydantic import BaseModel, EmailStr
 from datetime import date
 
+class InviteUser(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr    
+
 class AddUserRequest(BaseModel):
     first_name: str
     last_name: str
@@ -39,3 +44,11 @@ class ActivateDeactivateUserResponse(BaseModel):
     user_id: int
     is_active: bool
     message: str
+
+class AuthenticateUserResponse(BaseModel):
+    session_id: str
+    user_id: int
+    email: EmailStr
+    first_name: str
+    last_name: str
+    is_admin: bool    
