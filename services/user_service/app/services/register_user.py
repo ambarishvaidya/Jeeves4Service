@@ -3,10 +3,7 @@ from psycopg2 import IntegrityError
 from pydantic import BaseModel, EmailStr
 from datetime import date
 from services.user_service.app.dto.registration import RegisterUserRequest, RegisterUserResponse
-from services.user_service.app.dto.user import AddUserRequest
 from services.user_service.app.models.user import User, UserPassword
-from services.user_service.app.models.family import Family
-import uuid
 import secrets
 import string
 
@@ -52,72 +49,8 @@ class RegisterUserService:
             self.session.add(main_user_password)
             
             self.logger.info(f"Created main user with ID: {main_user.id}")
-            
-            # Generate unique family UUID
-            family_uuid = uuid.uuid4().bytes
-            self.logger.info(f"Generated family UUID: {family_uuid}")
-
-            # Create family entry for main user
-            main_family = Family(
-                user_id=main_user.id,
-                family_uuid=family_uuid,
-                is_admin=True
-            )
-            self.session.add(main_family)
-            
-            # Process additional users if any
-            if request.additional_users:
-                self.logger.info(f"Processing {len(request.additional_users)} additional users")
-                
-                for additional_user in request.additional_users:
-                    try:
-                        # Generate 8-character dynamic password
-                        dynamic_password = ''.join(secrets.choice(
-                            string.ascii_letters + string.digits
-                        ) for _ in range(8))
-                        
-                        # Hash the dynamic password
-                        (user_password_hash, user_salt) = self.crypto_hash_service(dynamic_password)
-                        
-                        # Create additional user
-                        user = User(
-                            first_name=additional_user.first_name,
-                            last_name=additional_user.last_name,
-                            email=additional_user.email,
-                            password_hash=user_password_hash,
-                            salt=user_salt,
-                            dob=additional_user.dob,
-                            is_admin=False
-                        )
-                        
-                        self.session.add(user)
-                        self.session.flush()
-                        
-                        # Create UserPassword entry for additional user (for testing/debugging purposes)
-                        additional_user_password = UserPassword(
-                            user_id=user.id,
-                            email=user.email,
-                            password_str=dynamic_password  # Store the generated password (only for testing!)
-                        )
-                        self.session.add(additional_user_password)
-                        
-                        self.logger.info(f"Created additional user with ID: {user.id}, dynamic password: {dynamic_password}")
-                        
-                        # Create family entry for additional user
-                        user_family = Family(
-                            user_id=user.id,
-                            family_uuid=family_uuid,
-                            is_admin=additional_user.is_admin if hasattr(additional_user, 'is_admin') else False
-                        )
-                        self.session.add(user_family)
-                    
-                    except IntegrityError as e:
-                        self.logger.error(f"Integrity error for additional user {additional_user.email}: {str(e)}")
-                    
-            
-            
-            self.session.commit()
-            self.logger.info(f"Successfully registered user and family with UUID: {family_uuid}")
+                                    
+            self.session.commit()            
             
             return RegisterUserResponse(
                 user_id=main_user.id,

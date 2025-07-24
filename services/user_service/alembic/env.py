@@ -9,7 +9,7 @@ from alembic import context
 from app.config import DATABASE_URL
 from app.db.base import Base
 # Import your models so Alembic can discover them
-from app.models import user, family
+from app.models import user, association
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
