@@ -9,7 +9,6 @@ from datetime import date
 from services.user_service.app.services.register_user import RegisterUserService
 from services.user_service.app.dto.registration import RegisterUserRequest, RegisterUserResponse
 from services.user_service.app.models.user import User
-from services.user_service.app.models.family import Family
 
 
 class TestRegisterUserService:

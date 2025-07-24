@@ -4,8 +4,6 @@ from pydantic import BaseModel, EmailStr
 from datetime import date
 from services.user_service.app.dto.registration import RegisterUserRequest, RegisterUserResponse
 from services.user_service.app.models.user import User, UserPassword
-from services.user_service.app.models.family import Family
-import uuid
 import secrets
 import string
 
@@ -51,21 +49,8 @@ class RegisterUserService:
             self.session.add(main_user_password)
             
             self.logger.info(f"Created main user with ID: {main_user.id}")
-            
-            # Generate unique family UUID
-            family_uuid = uuid.uuid4().bytes
-            self.logger.info(f"Generated family UUID: {family_uuid}")
-
-            # Create family entry for main user
-            main_family = Family(
-                user_id=main_user.id,
-                family_uuid=family_uuid,
-                is_admin=True
-            )
-            self.session.add(main_family)
-                        
-            self.session.commit()
-            self.logger.info(f"Successfully registered user and family with UUID: {family_uuid}")
+                                    
+            self.session.commit()            
             
             return RegisterUserResponse(
                 user_id=main_user.id,
