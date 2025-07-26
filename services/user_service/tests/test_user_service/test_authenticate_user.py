@@ -39,7 +39,7 @@ class TestAuthenticateUser:
         mock_user.is_admin = False
         
         self.mock_session.query.return_value.filter.return_value.first.return_value = mock_user
-        self.mock_crypto_service.verify_password.return_value = True
+        self.mock_crypto_service.return_value = True
         
         # Act
         with patch('secrets.token_hex', return_value='mocked_session_id'):
@@ -56,7 +56,7 @@ class TestAuthenticateUser:
         
         # Verify interactions
         self.mock_session.query.assert_called_once_with(User)
-        self.mock_crypto_service.verify_password.assert_called_once_with(
+        self.mock_crypto_service.assert_called_once_with(
             "hashed_password", "password123", "salt123"
         )
         self.mock_logger.info.assert_any_call("Starting authentication for email: john.doe@example.com")
@@ -87,7 +87,7 @@ class TestAuthenticateUser:
         mock_user.salt = "salt123"
         
         self.mock_session.query.return_value.filter.return_value.first.return_value = mock_user
-        self.mock_crypto_service.verify_password.return_value = False
+        self.mock_crypto_service.return_value = False
         
         # Act & Assert
         with pytest.raises(ValueError, match="Invalid password"):
@@ -95,7 +95,7 @@ class TestAuthenticateUser:
         
         # Verify interactions
         self.mock_session.query.assert_called_once_with(User)
-        self.mock_crypto_service.verify_password.assert_called_once_with(
+        self.mock_crypto_service.assert_called_once_with(
             "hashed_password", "wrong_password", "salt123"
         )
         self.mock_logger.info.assert_called_once_with("Starting authentication for email: john.doe@example.com")
@@ -145,14 +145,14 @@ class TestAuthenticateUser:
         mock_user.salt = "salt123"
         
         self.mock_session.query.return_value.filter.return_value.first.return_value = mock_user
-        self.mock_crypto_service.verify_password.return_value = False
+        self.mock_crypto_service.return_value = False
         
         # Act & Assert
         with pytest.raises(ValueError, match="Invalid password"):
             self.service.authenticate("john.doe@example.com", "")
         
         # Verify password verification was called with empty password
-        self.mock_crypto_service.verify_password.assert_called_once_with(
+        self.mock_crypto_service.assert_called_once_with(
             "hashed_password", "", "salt123"
         )
     
@@ -178,7 +178,7 @@ class TestAuthenticateUser:
         mock_user.salt = "salt123"
         
         self.mock_session.query.return_value.filter.return_value.first.return_value = mock_user
-        self.mock_crypto_service.verify_password.side_effect = Exception("Crypto error")
+        self.mock_crypto_service.side_effect = Exception("Crypto error")
         
         # Act & Assert
         with pytest.raises(Exception, match="Crypto error"):
@@ -200,7 +200,7 @@ class TestAuthenticateUser:
         mock_user.is_admin = False
         
         self.mock_session.query.return_value.filter.return_value.first.return_value = mock_user
-        self.mock_crypto_service.verify_password.return_value = True
+        self.mock_crypto_service.return_value = True
         
         # Act - authenticate twice
         with patch('secrets.token_hex', side_effect=['session_id_1', 'session_id_2']):
