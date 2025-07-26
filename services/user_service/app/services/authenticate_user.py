@@ -21,7 +21,7 @@ class AuthenticateUser:
                 raise ValueError("User not found")
             
             # Verify password
-            if not self.crypto_service.verify_password(user.password_hash, password, user.salt):
+            if not self.crypto_service(user.password_hash, password, user.salt):
                 self.logger.error("Invalid password")
                 raise ValueError("Invalid password")
             
