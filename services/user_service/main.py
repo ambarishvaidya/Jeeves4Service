@@ -1,91 +1,42 @@
-"""Main entry point for the user service application"""
+"""Main entry point for the user service FastAPI application"""
 
-from services.user_service.app.di.containers import Container, ServiceFactory
-from services.user_service.app.dto.registration import RegisterUserRequest
-from datetime import date
-import logging
+from fastapi import FastAPI
+from routes.users import router as users_router
+from app.di.containers import Container
 
+# Create FastAPI instance
+app = FastAPI(
+    title="User Service API",
+    description="API for user management operations",
+    version="1.0.0",
+    docs_url="/docs",        # Swagger UI will be available at /docs
+    redoc_url="/redoc"       # Alternative documentation at /redoc
+)
 
-def setup_application():
-    """Initialize the application with dependency injection"""
-    print("Initializing User Service Application...")
-    
-    # Initialize the container
-    container = Container()
-    
-    # Optional: Configure any settings
-    # container.config.from_dict({
-    #     "database_url": "postgresql://...",
-    #     "log_level": "INFO"
-    # })
-    
-    print("Dependency injection container initialized successfully!")
-    return container
+# Initialize dependency injection container
+container = Container()
 
+# Include routers
+app.include_router(users_router, prefix="/api/v1", tags=["users"])
 
-def example_service_usage():
-    """Example of how to use services in the application"""
-    try:
-        # Get a service using ServiceFactory
-        register_service = ServiceFactory.get_register_user_service()
-        
-        # Example usage (would normally come from API endpoints or other sources)
-        sample_request = RegisterUserRequest(
-            first_name="Demo",
-            last_name="User",
-            email="demo@example.com",
-            password="SecurePassword123!",
-            dob=date(1990, 1, 1)
-        )
-        
-        print(f"Using RegisterUserService: {type(register_service).__name__}")
-        print("Service has properly injected dependencies:")
-        print(f"- Logger: {type(register_service.logger)}")
-        print(f"- Session: {type(register_service.session)}")
-        print(f"- Crypto Service: {register_service.crypto_hash_service}")
-        
-        # Note: Uncomment below to actually register a user
-        # response = register_service.register_user(sample_request)
-        # print(f"Registration response: {response}")
-        
-    except Exception as e:
-        print(f"Error during service usage: {e}")
+# Root endpoint
+@app.get("/")
+async def root():
+    return {
+        "message": "Welcome to User Service API",
+        "version": "1.0.0",
+        "documentation": "/docs",
+        "health": "/health"
+    }
 
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "user_service"}
 
-def main():
-    """Main application entry point"""
-    print("=" * 50)
-    print("USER SERVICE APPLICATION")
-    print("=" * 50)
-    
-    # Setup dependency injection
-    container = setup_application()
-    
-    # Example service usage
-    print("\n--- Service Usage Example ---")
-    example_service_usage()
-    
-    # Show available services
-    print("\n--- Available Services ---")
-    services = [
-        "RegisterUserService",
-        "ActivateDeactivateUserService", 
-        "ChangePasswordService",
-        "CompleteRegistrationService",
-        "AddUserService",
-        "UpdateUserService"
-    ]
-    
-    for service in services:
-        print(f"✓ {service}")
-    
-    print("\n--- Application Ready ---")
-    print("All services are configured with dependency injection!")
-    print("Use ServiceFactory.get_*_service() to access services throughout your application.")
-    
-    # In a real application, you would start your web server here
-    # e.g., uvicorn.run(app, host="0.0.0.0", port=8000)
-
-
+# Entry point for running the server
 if __name__ == "__main__":
-    main()
+    import uvicorn
+    print("Starting User Service API...")
+    print("Swagger documentation will be available at: http://localhost:8000/docs")
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
