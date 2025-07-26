@@ -23,7 +23,7 @@ class ChangePasswordService:
                 raise ValueError("User not found")
             
             # Verify old password
-            if not self.crypto_verify_service(request.old_password, user.password_hash, user.salt):
+            if not self.crypto_verify_service(user.password_hash, request.old_password, user.salt):
                 self.logger.error(f"Invalid old password for user ID: {request.user_id}")
                 raise ValueError("Invalid old password")
             
