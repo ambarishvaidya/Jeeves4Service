@@ -7,7 +7,8 @@ from app.db.base import Base
 # Name is what will be used to identify the property. We are not as of
 # now interested in the other details.
 class Property(Base):
-    __tablename__ = "property"
+    __tablename__ = "details"
+    __table_args__ = {"schema": "property"}
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True, nullable=False)
@@ -18,18 +19,20 @@ class Property(Base):
 # ground floor first room, or main living room or main kitchen or 
 # dry balcony or main balcony. 
 class PropertyRooms(Base):
-    __tablename__ = "property_rooms"
+    __tablename__ = "rooms"
+    __table_args__ = {"schema": "property"}
 
     id = Column(Integer, primary_key=True, index=True)
-    property_id = Column(Integer, ForeignKey("property.id"), nullable=False)
+    property_id = Column(Integer, ForeignKey("property.details.id"), nullable=False)
     room_name = Column(String, index=True, nullable=False)    
     
 # This is how a property is associated with a user. A user can be associated
 # with multiple properties. This is a many to many relationship.
 class PropertyAssociation(Base):
-    __tablename__ = "property_associations"
+    __tablename__ = "associations"
+    __table_args__ = {"schema": "property"}
 
     id = Column(Integer, primary_key=True, index=True)
-    property_id = Column(Integer, ForeignKey("property.id"), nullable=False)
+    property_id = Column(Integer, ForeignKey("property.details.id"), nullable=False)
     user_id = Column(Integer, nullable=False)
         
