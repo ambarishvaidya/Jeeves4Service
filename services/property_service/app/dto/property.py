@@ -1,6 +1,6 @@
 from email import message
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class NewPropertyRequest(BaseModel):
@@ -8,13 +8,30 @@ class NewPropertyRequest(BaseModel):
     address: Optional[str] = None
     created_by: int
 
+class UpdatePropertyRequest(BaseModel):
+    property_id: int
+    name: Optional[str] = None
+    address: Optional[str] = None
+
+class AddUsersPropertyRequest(BaseModel):
+    property_id: int
+    user_ids: List[int]
+
 class PropertyRoomRequest(BaseModel):
     property_id: int
     room_name: str    
+
+class UpdateRoomRequest(BaseModel):
+    room_id: int
+    room_name: str
 
 class PropertyAssociationRequest(BaseModel):
     property_id: int
     user_id: int
 
 class PropertyResponse(BaseModel):
-    message: str    
+    message: str
+
+class RoomResponse(BaseModel):
+    message: str
+    room_id: Optional[int] = None    
