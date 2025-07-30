@@ -1,10 +1,11 @@
 from email import message
 from pydantic import BaseModel
+from typing import Optional
 
 
-class PropertyRequest(BaseModel):
+class NewPropertyRequest(BaseModel):
     name: str
-    address: str
+    address: Optional[str] = None
     created_by: int
 
 class PropertyRoomRequest(BaseModel):
