@@ -5,7 +5,8 @@ from sqlalchemy.orm import Mapped
 from app.db.base import Base
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "details"
+    __table_args__ = {"schema": "user"}
 
     id: Mapped[int] = Column(Integer, primary_key=True, index=True)
     first_name: Mapped[str] = Column(String(50), nullable=False)
@@ -22,9 +23,10 @@ class User(Base):
 This class represents a user in the system, with fields for personal information, authentication, and status.
 This is only for testing purposes.'''
 class UserPassword(Base):
-    __tablename__ = "user_passwords"
+    __tablename__ = "passwords"
+    __table_args__ = {"schema": "user"}
 
     id: Mapped[int] = Column(Integer, primary_key=True, index=True)
-    user_id: Mapped[int] = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id: Mapped[int] = Column(Integer, ForeignKey("user.details.id"), nullable=False)
     email: Mapped[str] = Column(String(100), nullable=False)
     password_str: Mapped[str] = Column(String(100), nullable=False)
