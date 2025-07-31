@@ -14,7 +14,7 @@ class Storage(Base):
     __table_args__ = {'schema': "property"}
 
     id = Column(Integer, primary_key=True, index=True)
-    property_id = Column(Integer, ForeignKey("property.details.id"), nullable=False)
+    property_id = Column(Integer, ForeignKey("property.location.id"), nullable=False)
     room_id = Column(Integer, ForeignKey("property.rooms.id"), nullable=False)
     storage_id = Column(Integer, nullable=True)
     storage_name = Column(String, index=True, nullable=False)    

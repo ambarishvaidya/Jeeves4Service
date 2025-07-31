@@ -7,7 +7,7 @@ from app.db.base import Base
 # Name is what will be used to identify the property. We are not as of
 # now interested in the other details.
 class Property(Base):
-    __tablename__ = "details"
+    __tablename__ = "location"
     __table_args__ = {"schema": "property"}
 
     id = Column(Integer, primary_key=True, index=True)
@@ -23,7 +23,7 @@ class PropertyRooms(Base):
     __table_args__ = {"schema": "property"}
 
     id = Column(Integer, primary_key=True, index=True)
-    property_id = Column(Integer, ForeignKey("property.details.id"), nullable=False)
+    property_id = Column(Integer, ForeignKey("property.location.id"), nullable=False)
     room_name = Column(String, index=True, nullable=False)    
     
 # This is how a property is associated with a user. A user can be associated
@@ -33,6 +33,6 @@ class PropertyAssociation(Base):
     __table_args__ = {"schema": "property"}
 
     id = Column(Integer, primary_key=True, index=True)
-    property_id = Column(Integer, ForeignKey("property.details.id"), nullable=False)
+    property_id = Column(Integer, ForeignKey("property.location.id"), nullable=False)
     user_id = Column(Integer, nullable=False)
         
