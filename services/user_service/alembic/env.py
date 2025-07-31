@@ -1,4 +1,5 @@
 from logging.config import fileConfig
+from sys import version
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -9,7 +10,7 @@ from alembic import context
 from app.config import DATABASE_URL
 from app.db.base import Base
 # Import your models so Alembic can discover them
-from app.models import user, association
+from app.models import user
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -50,6 +51,8 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        version_table="alembic_user_service_version",
+        version_table_schema="user"
     )
 
     with context.begin_transaction():
@@ -74,7 +77,10 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, 
+            target_metadata=target_metadata,
+            version_table="alembic_user_service_version",
+            version_table_schema="user"
         )
 
         with context.begin_transaction():
