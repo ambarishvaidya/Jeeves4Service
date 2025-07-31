@@ -1,3 +1,4 @@
+from unittest import mock
 from unittest.mock import Mock, patch
 import pytest
 from sqlalchemy.orm import Session
@@ -125,7 +126,7 @@ class TestAddRooms:
         self.mock_session.query.side_effect = query_side_effect
         
         # Act & Assert
-        with pytest.raises(ValueError, match="Room name 'Duplicate Room' already exists"):
+        with pytest.raises(ValueError, match="Room 'Duplicate Room' already exists in property 'Test Property'"):
             self.service.add_room(request)
         
         # Verify rollback was called
@@ -206,7 +207,7 @@ class TestAddRooms:
         
         # Verify rollback was called
         self.mock_session.rollback.assert_called_once()
-        self.mock_logger.error.assert_called_once_with("Error adding room to property: Database error")
+        self.mock_logger.error.assert_called_once_with("Error adding room to property 123: Database error")
     
     def test_add_room_database_error_on_flush(self):
         """Test when database flush fails"""
@@ -242,7 +243,7 @@ class TestAddRooms:
         
         # Verify rollback was called
         self.mock_session.rollback.assert_called_once()
-        self.mock_logger.error.assert_called_once_with("Error adding room to property: Flush error")
+        self.mock_logger.error.assert_called_once_with("Error adding room to property 123: Flush error")
     
     def test_add_room_database_error_on_commit(self):
         """Test when database commit fails"""
@@ -278,7 +279,7 @@ class TestAddRooms:
         
         # Verify rollback was called
         self.mock_session.rollback.assert_called_once()
-        self.mock_logger.error.assert_called_once_with("Error adding room to property: Commit error")
+        self.mock_logger.error.assert_called_once_with("Error adding room to property 123: Commit error")
     
     def test_add_room_with_special_characters(self):
         """Test adding room with special characters in name"""
@@ -333,11 +334,14 @@ class TestAddRooms:
         mock_property.id = 123
         mock_property.name = "Test Property"
         
+        mock_room = Mock(spec=PropertyRooms)        
+
         property_query = Mock()
         property_query.filter.return_value.first.return_value = mock_property
         
         room_query = Mock()
         room_query.filter.return_value.first.return_value = None
+        
         
         def query_side_effect(model):
             if model == Property:
@@ -347,11 +351,16 @@ class TestAddRooms:
             return Mock()  # fallback for any unexpected models
                 
         self.mock_session.query.side_effect = query_side_effect
-        
+
+        def add_side_effect(room_obj):
+            # Assign ID to the room object when it's added
+            room_obj.id = 456
+
+        self.mock_session.add.side_effect = add_side_effect
+
         # Act
         result = self.service.add_room(request)
         
         # Assert
-        self.mock_logger.info.assert_any_call("Adding room 'Logging Test Room' to property 123")
-        self.mock_logger.info.assert_any_call("Successfully added room 'Logging Test Room' to property 123")
+        self.mock_logger.info.assert_any_call("Room 'Logging Test Room' added successfully to property 123 with ID 456")
         self.mock_logger.error.assert_not_called()
