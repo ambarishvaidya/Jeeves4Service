@@ -206,7 +206,7 @@ class TestAddRooms:
         
         # Verify rollback was called
         self.mock_session.rollback.assert_called_once()
-        self.mock_logger.error.assert_called_once_with("Error adding room: Database error")
+        self.mock_logger.error.assert_called_once_with("Error adding room to property 123: Database error")
     
     def test_add_room_database_error_on_flush(self):
         """Test when database flush fails"""
@@ -242,8 +242,8 @@ class TestAddRooms:
         
         # Verify rollback was called
         self.mock_session.rollback.assert_called_once()
-        self.mock_logger.error.assert_called_once_with("Error adding room: Flush error")
-    
+        self.mock_logger.error.assert_called_once_with("Error adding room to property 123: Flush error")
+
     def test_add_room_database_error_on_commit(self):
         """Test when database commit fails"""
         # Arrange
@@ -278,8 +278,8 @@ class TestAddRooms:
         
         # Verify rollback was called
         self.mock_session.rollback.assert_called_once()
-        self.mock_logger.error.assert_called_once_with("Error adding room: Commit error")
-    
+        self.mock_logger.error.assert_called_once_with("Error adding room to property 123: Commit error")
+
     def test_add_room_with_special_characters(self):
         """Test adding room with special characters in name"""
         # Arrange

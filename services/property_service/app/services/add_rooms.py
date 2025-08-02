@@ -49,6 +49,6 @@ class AddRooms:
             )
 
         except Exception as e:
-            self.logger.error(f"Error adding room: {str(e)}")
+            self.logger.error(f"Error adding room to property {request.property_id}: {str(e)}")
             self.session.rollback()
             raise e
