@@ -1,5 +1,5 @@
-from app.dto.property import PropertyRoomRequest, RoomResponse
-from app.models.property import Property, PropertyRooms
+from services.property_service.app.dto.property import PropertyRoomRequest, RoomResponse
+from services.property_service.app.models.property import Property, PropertyRooms
 from sqlalchemy import and_
 
 

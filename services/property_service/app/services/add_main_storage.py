@@ -1,5 +1,5 @@
-from app.dto.storage import PropertyStorageRequest, PropertyStorageResponse
-from app.models.storage import Storage
+from services.property_service.app.dto.storage import PropertyStorageRequest, PropertyStorageResponse
+from services.property_service.app.models.storage import Storage
 
 
 class AddMainStorage:

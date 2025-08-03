@@ -1,5 +1,6 @@
 {
   "python.analysis.extraPaths": [
+    "${workspaceFolder}",
     "${workspaceFolder}/services/shared",
     "${workspaceFolder}/services/shared/j4s_logging_lib"
   ],
@@ -13,7 +14,12 @@
     ],
   "python.analysis.diagnosticMode": "workspace",
   "python.testing.pytestArgs": [
-    "."
+    "--rootdir=${workspaceFolder}",
+    "--ignore=services/property_service/app",
+    "--ignore=services/user_service/app", 
+    "services/property_service/tests",
+    "services/user_service/tests",
+    "services/tests"
   ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true
