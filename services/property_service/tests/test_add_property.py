@@ -3,9 +3,9 @@ import pytest
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.services.add_property import AddProperty
-from app.dto.property import NewPropertyRequest, PropertyResponse
-from app.models.property import Property, PropertyAssociation
+from services.property_service.app.services.add_property import AddProperty
+from services.property_service.app.dto.property import NewPropertyRequest, PropertyResponse
+from services.property_service.app.models.property import Property, PropertyAssociation
 
 
 class TestAddProperty:
@@ -42,7 +42,7 @@ class TestAddProperty:
         self.mock_session.commit = Mock()
         
         # Mock the property creation to return the mock_property with ID
-        with patch('app.services.add_property.Property') as mock_property_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class:
             mock_property_class.return_value = mock_property
             
             # Act
@@ -85,8 +85,8 @@ class TestAddProperty:
         self.mock_session.commit = Mock()
         
         # Act
-        with patch('app.services.add_property.Property') as mock_property_class, \
-             patch('app.services.add_property.PropertyAssociation') as mock_association_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class, \
+             patch('services.property_service.app.services.add_property.PropertyAssociation') as mock_association_class:
             
             mock_property_class.return_value = mock_property
             mock_association = Mock(spec=PropertyAssociation)
@@ -120,7 +120,7 @@ class TestAddProperty:
         mock_property.name = ""
         
         # Act
-        with patch('app.services.add_property.Property') as mock_property_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class:
             mock_property_class.return_value = mock_property
             result = self.service.add_property(new_property_request)
         
@@ -142,7 +142,7 @@ class TestAddProperty:
         mock_property.name = "No Address Property"
         
         # Act
-        with patch('app.services.add_property.Property') as mock_property_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class:
             mock_property_class.return_value = mock_property
             result = self.service.add_property(new_property_request)
         
@@ -170,7 +170,7 @@ class TestAddProperty:
         self.mock_session.add.side_effect = SQLAlchemyError("Database connection failed")
         
         # Act & Assert
-        with patch('app.services.add_property.Property') as mock_property_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class:
             mock_property_class.return_value = Mock(spec=Property)
             
             with pytest.raises(SQLAlchemyError, match="Database connection failed"):
@@ -195,7 +195,7 @@ class TestAddProperty:
         self.mock_session.flush.side_effect = SQLAlchemyError("Flush operation failed")
         
         # Act & Assert
-        with patch('app.services.add_property.Property') as mock_property_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class:
             mock_property_class.return_value = Mock(spec=Property)
             
             with pytest.raises(SQLAlchemyError, match="Flush operation failed"):
@@ -221,7 +221,7 @@ class TestAddProperty:
         self.mock_session.commit.side_effect = SQLAlchemyError("Commit operation failed")
         
         # Act & Assert
-        with patch('app.services.add_property.Property') as mock_property_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class:
             mock_property_class.return_value = mock_property
             
             with pytest.raises(SQLAlchemyError, match="Commit operation failed"):
@@ -244,8 +244,8 @@ class TestAddProperty:
         mock_property.id = 555
         
         # Act & Assert
-        with patch('app.services.add_property.Property') as mock_property_class, \
-             patch('app.services.add_property.PropertyAssociation') as mock_association_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class, \
+             patch('services.property_service.app.services.add_property.PropertyAssociation') as mock_association_class:
             
             mock_property_class.return_value = mock_property
             mock_association_class.side_effect = Exception("Association creation failed")
@@ -270,7 +270,7 @@ class TestAddProperty:
         self.mock_session.add.side_effect = Exception("Generic error")
         
         # Act & Assert
-        with patch('app.services.add_property.Property') as mock_property_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class:
             mock_property_class.return_value = Mock(spec=Property)
             
             with pytest.raises(Exception, match="Generic error"):
@@ -296,7 +296,7 @@ class TestAddProperty:
         mock_property.name = "Logging Test Property"
         
         # Act
-        with patch('app.services.add_property.Property') as mock_property_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class:
             mock_property_class.return_value = mock_property
             result = self.service.add_property(new_property_request)
         
@@ -321,7 +321,7 @@ class TestAddProperty:
         mock_property.name = "Property with Special Chars !@#$%^&*()"
         
         # Act
-        with patch('app.services.add_property.Property') as mock_property_class:
+        with patch('services.property_service.app.services.add_property.Property') as mock_property_class:
             mock_property_class.return_value = mock_property
             result = self.service.add_property(new_property_request)
         

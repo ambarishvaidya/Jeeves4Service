@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import Mock
-from app.dto.storage import PropertyStorageRequest, PropertyStorageResponse
-from app.services.add_main_storage import AddMainStorage
-from app.models.storage import Storage
+from services.property_service.app.dto.storage import PropertyStorageRequest, PropertyStorageResponse
+from services.property_service.app.services.add_main_storage import AddMainStorage
+from services.property_service.app.models.storage import Storage
 
 
 class TestAddMainStorage:

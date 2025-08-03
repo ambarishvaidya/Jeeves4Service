@@ -3,9 +3,9 @@ import pytest
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.services.add_rooms import AddRooms
-from app.dto.property import PropertyRoomRequest, RoomResponse
-from app.models.property import Property, PropertyRooms
+from services.property_service.app.services.add_rooms import AddRooms
+from services.property_service.app.dto.property import PropertyRoomRequest, RoomResponse
+from services.property_service.app.models.property import Property, PropertyRooms
 
 
 class TestAddRooms:
