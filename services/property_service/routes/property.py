@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from app.di.containers import ServiceFactory
-from app.dto.property import (
+from services.property_service.app.di.containers import ServiceFactory
+from services.property_service.app.dto.property import (
     NewPropertyRequest, 
     UpdatePropertyRequest, 
     PropertyResponse
