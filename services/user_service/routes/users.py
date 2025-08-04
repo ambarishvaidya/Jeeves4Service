@@ -2,9 +2,9 @@ from ast import List
 from urllib import request
 from fastapi import APIRouter, HTTPException
 
-from app.di.containers import ServiceFactory
-from app.dto.registration import RegisterUserResponse, RegisterUserRequest
-from app.dto.user import AuthenticateUserResponse, ChangePasswordRequest, ChangePasswordResponse, InviteUser
+from services.user_service.app.di.containers import ServiceFactory
+from services.user_service.app.dto.registration import RegisterUserResponse, RegisterUserRequest
+from services.user_service.app.dto.user import AuthenticateUserResponse, ChangePasswordRequest, ChangePasswordResponse, InviteUser
 
 
 router = APIRouter()
