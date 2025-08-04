@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from app.db.base import Base
+from services.property_service.app.db.base import Base
 
 # Assuming that there is a master bedroom with id as 3 then the following will be defined 
 # as storage. Assuming property_id as 1 and room_id as 3, then the container_id will be
@@ -11,7 +11,7 @@ from app.db.base import Base
 # location will be traced back from container_id
 class Storage(Base):
     __tablename__ = "storage"
-    __table_args__ = {'schema': "property"}
+    __table_args__ = {'schema': "property", 'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
     property_id = Column(Integer, ForeignKey("property.location.id"), nullable=False)

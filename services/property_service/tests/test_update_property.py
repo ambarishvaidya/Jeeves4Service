@@ -3,9 +3,9 @@ import pytest
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.services.update_property import UpdateProperty
-from app.dto.property import UpdatePropertyRequest, PropertyResponse
-from app.models.property import Property
+from services.property_service.app.services.update_property import UpdateProperty
+from services.property_service.app.dto.property import UpdatePropertyRequest, PropertyResponse
+from services.property_service.app.models.property import Property
 
 
 class TestUpdateProperty:

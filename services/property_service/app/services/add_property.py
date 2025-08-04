@@ -1,5 +1,5 @@
-from app.dto.property import NewPropertyRequest, PropertyResponse
-from app.models.property import Property, PropertyAssociation
+from services.property_service.app.dto.property import NewPropertyRequest, PropertyResponse
+from services.property_service.app.models.property import Property, PropertyAssociation
 
 
 

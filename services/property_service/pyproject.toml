@@ -8,24 +8,7 @@ version = "0.1.0"
 description = "Property Service Application"
 readme = "README.md"
 requires-python = ">=3.8"
-dependencies = [
-    "sqlalchemy",
-    "alembic",
-    "psycopg2-binary",
-    "fastapi",
-    "uvicorn",
-    "python-dotenv",
-    "dependency-injector",
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest",
-    "pytest-asyncio",
-    "black",
-    "flake8",
-    "mypy",
-]
+# Dependencies are now managed at the monorepo root level
 
 [tool.setuptools.packages.find]
 where = ["."]

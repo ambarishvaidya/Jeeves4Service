@@ -1,9 +1,9 @@
 """Main entry point for the property service FastAPI application"""
 
 from fastapi import FastAPI
-from routes.property import router as property_router
-from routes.storage import router as storage_router
-from app.di.containers import Container
+from services.property_service.routes.property import router as property_router
+from services.property_service.routes.storage import router as storage_router
+from services.property_service.app.di.containers import Container
 
 # Create FastAPI instance
 app = FastAPI(
@@ -41,4 +41,4 @@ if __name__ == "__main__":
     import uvicorn
     print("Starting Property Service API...")
     print("Swagger documentation will be available at: http://localhost:8001/docs")
-    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)
+    uvicorn.run("services.property_service.main:app", host="0.0.0.0", port=8001, reload=True)

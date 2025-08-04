@@ -7,10 +7,10 @@ from sqlalchemy import pool
 from alembic import context
 
 # Import your shared config and models
-from app.config import DATABASE_URL
-from app.db.base import Base
+from services.user_service.app.config import DATABASE_URL
+from services.user_service.app.db.base import Base
 # Import your models so Alembic can discover them
-from app.models import user
+from services.user_service.app.models import user
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -1,5 +1,5 @@
-from app.dto.property import UpdatePropertyRequest, PropertyResponse
-from app.models.property import Property
+from services.property_service.app.dto.property import UpdatePropertyRequest, PropertyResponse
+from services.property_service.app.models.property import Property
 from sqlalchemy.orm.exc import NoResultFound
 
 

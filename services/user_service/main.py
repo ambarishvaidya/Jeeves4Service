@@ -1,8 +1,8 @@
 """Main entry point for the user service FastAPI application"""
 
 from fastapi import FastAPI
-from routes.users import router as users_router
-from app.di.containers import Container
+from services.user_service.routes.users import router as users_router
+from services.user_service.app.di.containers import Container
 
 # Create FastAPI instance
 app = FastAPI(
@@ -39,4 +39,4 @@ if __name__ == "__main__":
     import uvicorn
     print("Starting User Service API...")
     print("Swagger documentation will be available at: http://localhost:8000/docs")
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("services.user_service.main:app", host="0.0.0.0", port=8000, reload=True)

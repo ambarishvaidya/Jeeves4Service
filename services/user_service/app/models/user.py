@@ -2,11 +2,11 @@ import email
 from sqlalchemy import Column, ForeignKey, Integer, String, LargeBinary, Date, Boolean, UUID
 from datetime import date
 from sqlalchemy.orm import Mapped
-from app.db.base import Base
+from services.user_service.app.db.base import Base
 
 class User(Base):
     __tablename__ = "details"
-    __table_args__ = {"schema": "user"}
+    __table_args__ = {"schema": "user", "extend_existing": True}
 
     id: Mapped[int] = Column(Integer, primary_key=True, index=True)
     first_name: Mapped[str] = Column(String(50), nullable=False)
@@ -24,7 +24,7 @@ This class represents a user in the system, with fields for personal information
 This is only for testing purposes.'''
 class UserPassword(Base):
     __tablename__ = "passwords"
-    __table_args__ = {"schema": "user"}
+    __table_args__ = {"schema": "user", "extend_existing": True}
 
     id: Mapped[int] = Column(Integer, primary_key=True, index=True)
     user_id: Mapped[int] = Column(Integer, ForeignKey("user.details.id"), nullable=False)
