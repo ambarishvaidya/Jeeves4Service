@@ -52,3 +52,7 @@ class AddRooms:
             self.logger.error(f"Error adding room to property {request.property_id}: {str(e)}")
             self.session.rollback()
             raise e
+        
+        finally:
+            if self.session:
+                self.session.close()

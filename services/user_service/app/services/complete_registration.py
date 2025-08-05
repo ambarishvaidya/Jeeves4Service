@@ -50,6 +50,10 @@ class CompleteRegistrationService:
             self.session.rollback()
             self.logger.error(f"Error during complete registration: {str(e)}")
             raise
+        
+        finally:
+            if self.session:
+                self.session.close()
 
 
 # Legacy function for backward compatibility

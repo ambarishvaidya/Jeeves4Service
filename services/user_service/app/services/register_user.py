@@ -73,7 +73,8 @@ class RegisterUserService:
             raise
             
         finally:
-            pass
+            if self.session:
+                self.session.close()
 
     def _validate_user_inputs(self, request: RegisterUserRequest):
         """Validate user input data"""
