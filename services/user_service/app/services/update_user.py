@@ -38,6 +38,10 @@ class UpdateUserService:
             self.session.rollback()
             self.logger.error(f"Error during user update: {str(e)}")
             raise
+        
+        finally:
+            if self.session:
+                self.session.close()
 
 
 # Legacy function for backward compatibility

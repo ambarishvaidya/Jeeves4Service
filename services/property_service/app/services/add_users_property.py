@@ -61,3 +61,7 @@ class AddUsersProperty:
             self.logger.error(f"Error adding users to property: {str(e)}")
             self.session.rollback()
             raise e
+        
+        finally:
+            if self.session:
+                self.session.close()
