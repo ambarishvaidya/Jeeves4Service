@@ -55,3 +55,7 @@ class UpdateRoom:
             self.logger.error(f"Error updating room: {str(e)}")
             self.session.rollback()
             raise e
+        
+        finally:
+            if self.session:
+                self.session.close()

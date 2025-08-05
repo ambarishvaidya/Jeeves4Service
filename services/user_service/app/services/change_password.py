@@ -61,6 +61,10 @@ class ChangePasswordService:
             self.session.rollback()
             self.logger.error(f"Error during password change: {str(e)}")
             raise
+        
+        finally:
+            if self.session:
+                self.session.close()
 
 
 # Legacy function for backward compatibility

@@ -8,13 +8,22 @@ class AddUserService:
     
     def add_user(self, request=None):
         """Add a new user"""
-        self.logger.info("Starting user addition process")
+        try:
+            self.logger.info("Starting user addition process")
+            
+            # Implementation of user addition logic goes here
+            # ...
+            
+            self.logger.info("User added successfully")
+            return {"message": "User added successfully"}
         
-        # Implementation of user addition logic goes here
-        # ...
+        except Exception as e:
+            self.logger.error(f"Error during user addition: {str(e)}")
+            raise
         
-        self.logger.info("User added successfully")
-        return {"message": "User added successfully"}
+        finally:
+            if self.session:
+                self.session.close()
 
 
 # Legacy function for backward compatibility

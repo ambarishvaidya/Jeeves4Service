@@ -76,9 +76,14 @@ class InviteUserService:
                 continue
         
         # Return summary message
-        if failed_invites == 0:
-            return f"All {successful_invites} users invited successfully"
-        elif successful_invites == 0:
-            return f"Failed to invite all {failed_invites} users"
-        else:
-            return f"Invited {successful_invites} users successfully, {failed_invites} failed. Failed users: {', '.join(failed_users)}"
+        try:
+            if failed_invites == 0:
+                return f"All {successful_invites} users invited successfully"
+            elif successful_invites == 0:
+                return f"Failed to invite all {failed_invites} users"
+            else:
+                return f"Invited {successful_invites} users successfully, {failed_invites} failed. Failed users: {', '.join(failed_users)}"
+        
+        finally:
+            if self.session:
+                self.session.close()

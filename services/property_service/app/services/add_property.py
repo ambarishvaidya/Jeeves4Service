@@ -41,3 +41,7 @@ class AddProperty:
             self.logger.error(f"Error adding property: {str(e)}")
             self.session.rollback()
             raise e
+        
+        finally:
+            if self.session:
+                self.session.close()

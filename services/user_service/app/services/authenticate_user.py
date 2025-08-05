@@ -43,3 +43,7 @@ class AuthenticateUser:
             self.logger.error(f"Error during authentication: {str(e)}")
             raise
         
+        finally:
+            if self.session:
+                self.session.close()
+        

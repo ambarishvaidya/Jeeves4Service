@@ -44,3 +44,7 @@ class AddMainStorage:
             self.logger.error(error_msg)
             self.session.rollback()
             return PropertyStorageResponse(message=error_msg)
+        
+        finally:
+            if self.session:
+                self.session.close()
