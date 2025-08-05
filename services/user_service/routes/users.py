@@ -31,7 +31,7 @@ async def authenticate_user(email: str, password: str) -> AuthenticateUserRespon
 async def change_password(request: ChangePasswordRequest) -> ChangePasswordResponse:
     try:
         change_password_service = ServiceFactory.get_change_password_service()
-        change_password_service.change_password(request)
-        return {"message": "Password changed successfully"}
+        response = change_password_service.change_password(request)
+        return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
