@@ -1,4 +1,5 @@
 import logging
+from services.property_service.app.services import get_property
 from services.shared.j4s_logging_lib.j4s_logger import configure_logging
 from dependency_injector import containers, providers
 from services.property_service.app.db.session import SessionLocal
@@ -46,6 +47,15 @@ class Container(containers.DeclarativeContainer):
         ),
         session=db_session
     )
+
+    get_property_service = providers.Factory(
+        "services.property_service.app.services.get_property.GetProperty",
+        logger=providers.Factory(
+            LoggerFactory.create_logger_for,
+            logger_name="GetPropertyService"
+        ),
+        session=db_session
+    )    
 
     add_rooms_service = providers.Factory(
         "services.property_service.app.services.add_rooms.AddRooms",
@@ -98,6 +108,10 @@ class ServiceFactory:
     @staticmethod
     def get_add_property_service():
         return Container.add_property_service()
+
+    @staticmethod
+    def get_get_property_service():
+        return Container.get_property_service()
 
     @staticmethod
     def get_update_property_service():
