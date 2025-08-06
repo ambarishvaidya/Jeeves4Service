@@ -37,5 +37,8 @@ class PropertyResponse(BaseModel):
     message: Optional[str] = None
 
 class RoomResponse(BaseModel):
-    message: str
-    room_id: Optional[int] = None    
+    message: Optional[str] = None
+    room_id: Optional[int] = None
+    id: Optional[int] = None
+    property_id: Optional[int] = None
+    room_name: Optional[str] = None    

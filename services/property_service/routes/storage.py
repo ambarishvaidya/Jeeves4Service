@@ -45,3 +45,35 @@ async def add_storage(request: PropertyStorageRequest) -> PropertyStorageRespons
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/storage/property/{property_id}", response_model=list[PropertyStorageResponse])
+async def get_storage_by_property(property_id: int) -> list[PropertyStorageResponse]:
+    """Get all storage for a specific property"""
+    try:
+        get_storage_service = ServiceFactory.get_get_storage_service()
+        response = get_storage_service.get_storage_by_property(property_id)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/storage/room/{room_id}", response_model=list[PropertyStorageResponse])
+async def get_storage_by_room(room_id: int) -> list[PropertyStorageResponse]:
+    """Get all storage for a specific room"""
+    try:
+        get_storage_service = ServiceFactory.get_get_storage_service()
+        response = get_storage_service.get_storage_by_room(room_id)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/storage/{storage_id}", response_model=PropertyStorageResponse)
+async def get_storage_by_id(storage_id: int) -> PropertyStorageResponse:
+    """Get a specific storage by its ID"""
+    try:
+        get_storage_service = ServiceFactory.get_get_storage_service()
+        response = get_storage_service.get_storage_by_id(storage_id)
+        if response is None:
+            raise HTTPException(status_code=404, detail="Storage not found")
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

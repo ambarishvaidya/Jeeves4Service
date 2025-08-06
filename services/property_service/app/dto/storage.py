@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class PropertyStorageRequest(BaseModel):
@@ -9,4 +10,9 @@ class PropertyStorageRequest(BaseModel):
    
 
 class PropertyStorageResponse(BaseModel):
-    message: str
+    message: Optional[str] = None
+    id: Optional[int] = None
+    property_id: Optional[int] = None
+    room_id: Optional[int] = None
+    container_id: Optional[int] = None
+    storage_name: Optional[str] = None

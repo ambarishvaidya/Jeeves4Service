@@ -102,6 +102,24 @@ class Container(containers.DeclarativeContainer):
         session=db_session
     )
 
+    get_rooms_service = providers.Factory(
+        "services.property_service.app.services.get_rooms.GetRooms",
+        logger=providers.Factory(
+            LoggerFactory.create_logger_for,
+            logger_name="GetRoomsService"
+        ),
+        session=db_session
+    )
+
+    get_storage_service = providers.Factory(
+        "services.property_service.app.services.get_storage.GetStorage",
+        logger=providers.Factory(
+            LoggerFactory.create_logger_for,
+            logger_name="GetStorageService"
+        ),
+        session=db_session
+    )
+
 
 class ServiceFactory:
     """Factory to create service instances with injected dependencies"""
@@ -144,3 +162,11 @@ class ServiceFactory:
     @staticmethod
     def get_update_room_service():
         return Container.update_room_service()
+    
+    @staticmethod
+    def get_get_rooms_service():
+        return Container.get_rooms_service()
+    
+    @staticmethod
+    def get_get_storage_service():
+        return Container.get_storage_service()

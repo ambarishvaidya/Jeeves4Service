@@ -62,3 +62,25 @@ async def get_properties(user_id: int) -> list[PropertyResponse]:
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/rooms/property/{property_id}", response_model=list[RoomResponse])
+async def get_rooms_by_property(property_id: int) -> list[RoomResponse]:
+    """Get all rooms for a specific property"""
+    try:
+        get_rooms_service = ServiceFactory.get_get_rooms_service()
+        response = get_rooms_service.get_rooms_by_property(property_id)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/rooms/{room_id}", response_model=RoomResponse)
+async def get_room_by_id(room_id: int) -> RoomResponse:
+    """Get a specific room by its ID"""
+    try:
+        get_rooms_service = ServiceFactory.get_get_rooms_service()
+        response = get_rooms_service.get_room_by_id(room_id)
+        if response is None:
+            raise HTTPException(status_code=404, detail="Room not found")
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
