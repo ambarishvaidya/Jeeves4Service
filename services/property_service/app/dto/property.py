@@ -1,4 +1,5 @@
 from email import message
+from token import OP
 from pydantic import BaseModel
 from typing import Optional, List
 
@@ -30,8 +31,14 @@ class PropertyAssociationRequest(BaseModel):
     user_id: int
 
 class PropertyResponse(BaseModel):
-    message: str
+    id: Optional[int] = None    
+    name: Optional[str] = None
+    address: Optional[str] = None
+    message: Optional[str] = None
 
 class RoomResponse(BaseModel):
-    message: str
-    room_id: Optional[int] = None    
+    message: Optional[str] = None
+    room_id: Optional[int] = None
+    id: Optional[int] = None
+    property_id: Optional[int] = None
+    room_name: Optional[str] = None    
