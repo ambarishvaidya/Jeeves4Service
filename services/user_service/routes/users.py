@@ -1,3 +1,4 @@
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import APIRouter, HTTPException, Response, Depends, Header
 from typing import Optional
 
@@ -16,10 +17,20 @@ jwt_token = JwtTokenProcessor(
     expiry_milli_seconds=3600000
 )
 
+security = HTTPBearer()
 
-def verify_token(authorization: Optional[str] = Header(None)) -> dict:
-
-    if not authorization:
+def verify_token(authorization: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    token = authorization.credentials
+    try:
+        payload = jwt_token.decode_token(token)
+        if "error" in payload:
+            raise HTTPException(
+                status_code=401,
+                detail=payload["error"],
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        return payload
+    except Exception as e:
         raise HTTPException(
             status_code=401, 
             detail="Authorization header is missing",
