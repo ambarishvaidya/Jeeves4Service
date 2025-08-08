@@ -35,8 +35,7 @@ async def authenticate_user(email: str, password: str, response: Response) -> Au
             "username": auth_response.email,
             "trace_id": auth_response.session_id
         }
-        token = jwt_token.generate_token(payload)
-        response.headers["Authorization"] = f"Bearer {token}"
+        response.headers["Authorization"] = f"Bearer {jwt_token.generate_token(payload)}"
         return auth_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
