@@ -1,13 +1,70 @@
-from ast import List
-from urllib import request
-from fastapi import APIRouter, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import APIRouter, HTTPException, Response, Depends, Header
+from typing import Optional
 
+from services.shared.j4s_jwt_lib.jwt_processor import JwtTokenProcessor
 from services.user_service.app.di.containers import ServiceFactory
 from services.user_service.app.dto.registration import RegisterUserResponse, RegisterUserRequest
 from services.user_service.app.dto.user import AuthenticateUserResponse, ChangePasswordRequest, ChangePasswordResponse, InviteUser
 
 
 router = APIRouter()
+
+jwt_token = JwtTokenProcessor(
+    issuer="http://jeeves4service",
+    audience="http://jeeves4service",
+    secret_key="J33v3s4s3rv1c3jeeves4service",
+    expiry_milli_seconds=3600000
+)
+
+security = HTTPBearer()
+
+def verify_token(authorization: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    token = authorization.credentials
+    try:
+        payload = jwt_token.decode_token(token)
+        if "error" in payload:
+            raise HTTPException(
+                status_code=401,
+                detail=payload["error"],
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        return payload
+    except Exception as e:
+        raise HTTPException(
+            status_code=401, 
+            detail="Authorization header is missing",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=401, 
+            detail="Invalid authorization header format. Expected 'Bearer <token>'",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    
+    token = authorization.replace("Bearer ", "", 1)
+    
+    try:
+        payload = jwt_token.decode_token(token)
+        
+        # Check if decode_token returned an error
+        if "error" in payload:
+            raise HTTPException(
+                status_code=401, 
+                detail=payload["error"],
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        
+        return payload
+    except Exception as e:
+        raise HTTPException(
+            status_code=401, 
+            detail="Token validation failed",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+
 
 @router.post("/users/register", response_model=RegisterUserResponse)
 async def register_user(request: RegisterUserRequest) -> RegisterUserResponse:
@@ -19,18 +76,26 @@ async def register_user(request: RegisterUserRequest) -> RegisterUserResponse:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/users/authenticate", response_model=AuthenticateUserResponse)
-async def authenticate_user(email: str, password: str) -> AuthenticateUserResponse:
+async def authenticate_user(email: str, password: str, response: Response) -> AuthenticateUserResponse:
     try:
         auth_service = ServiceFactory.get_authenticate_user_service()
-        response = auth_service.authenticate(email, password)
-        return response
+        auth_response = auth_service.authenticate(email, password)
+        payload = {
+            "user_id": auth_response.user_id,
+            "username": auth_response.email,
+            "trace_id": auth_response.session_id
+        }
+        response.headers["Authorization"] = f"Bearer {jwt_token.generate_token(payload)}"
+        return auth_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.post("/users/change-password", response_model=ChangePasswordResponse)
-async def change_password(request: ChangePasswordRequest) -> ChangePasswordResponse:
+async def change_password( request: ChangePasswordRequest, current_user: dict = Depends(verify_token) ) -> ChangePasswordResponse:
     try:
+        
         change_password_service = ServiceFactory.get_change_password_service()
+        request.user_id = current_user.get("user_id")
         response = change_password_service.change_password(request)
         return response
     except Exception as e:
