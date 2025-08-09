@@ -36,35 +36,6 @@ def verify_token(authorization: HTTPAuthorizationCredentials = Depends(security)
             detail="Authorization header is missing",
             headers={"WWW-Authenticate": "Bearer"}
         )
-    
-    if not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=401, 
-            detail="Invalid authorization header format. Expected 'Bearer <token>'",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-    
-    token = authorization.replace("Bearer ", "", 1)
-    
-    try:
-        payload = jwt_token.decode_token(token)
-        
-        # Check if decode_token returned an error
-        if "error" in payload:
-            raise HTTPException(
-                status_code=401, 
-                detail=payload["error"],
-                headers={"WWW-Authenticate": "Bearer"}
-            )
-        
-        return payload
-    except Exception as e:
-        raise HTTPException(
-            status_code=401, 
-            detail="Token validation failed",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-
 
 @router.post("/users/register", response_model=RegisterUserResponse)
 async def register_user(request: RegisterUserRequest) -> RegisterUserResponse:
