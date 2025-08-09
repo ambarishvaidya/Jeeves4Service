@@ -34,7 +34,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.add_main_storage.AddMainStorage",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="AddMainStorageService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )
@@ -43,7 +43,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.add_property.AddProperty",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="AddPropertyService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )
@@ -52,7 +52,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.get_property.GetProperty",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="GetPropertyService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )    
@@ -61,7 +61,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.add_rooms.AddRooms",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="AddRoomsService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )
@@ -70,7 +70,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.add_storage.AddStorage",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="AddStorageService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )
@@ -79,7 +79,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.add_users_property.AddUsersProperty",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="AddUsersToPropertyService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )
@@ -88,7 +88,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.update_property.UpdateProperty",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="UpdatePropertyService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )
@@ -97,7 +97,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.update_room.UpdateRoom",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="UpdateRoomService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )
@@ -106,7 +106,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.get_rooms.GetRooms",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="GetRoomsService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )
@@ -115,7 +115,7 @@ class Container(containers.DeclarativeContainer):
         "services.property_service.app.services.get_storage.GetStorage",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="GetStorageService"
+            logger_name="PropertyService"
         ),
         session=db_session
     )

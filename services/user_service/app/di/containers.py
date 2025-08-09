@@ -42,7 +42,7 @@ class Container(containers.DeclarativeContainer):
         "services.user_service.app.services.register_user.RegisterUserService",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="RegisterUserService"
+            logger_name="UserService"
         ),
         session=db_session,
         crypto_hash_service=crypto_hash_service
@@ -52,7 +52,7 @@ class Container(containers.DeclarativeContainer):
         "services.user_service.app.services.authenticate_user.AuthenticateUser",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="AuthenticateUserService"
+            logger_name="UserService"
         ),
         session=db_session,
         crypto_service=crypto_verify_service
@@ -62,7 +62,7 @@ class Container(containers.DeclarativeContainer):
         "services.user_service.app.services.activate_deactivate_user.ActivateDeactivateUserService",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="ActivateDeactivateUserService"
+            logger_name="UserService"
         ),
         session=db_session
     )
@@ -71,7 +71,7 @@ class Container(containers.DeclarativeContainer):
         "services.user_service.app.services.change_password.ChangePasswordService",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="ChangePasswordService"
+            logger_name="UserService"
         ),
         session=db_session,
         crypto_hash_service=crypto_hash_service,
@@ -82,7 +82,7 @@ class Container(containers.DeclarativeContainer):
         "services.user_service.app.services.complete_registration.CompleteRegistrationService",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="CompleteRegistrationService"
+            logger_name="UserService"
         ),
         session=db_session,
         crypto_hash_service=crypto_hash_service,
@@ -93,7 +93,7 @@ class Container(containers.DeclarativeContainer):
         "services.user_service.app.services.add_user.AddUserService",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="AddUserService"
+            logger_name="UserService"
         ),
         session=db_session,
         crypto_hash_service=crypto_hash_service
@@ -103,7 +103,7 @@ class Container(containers.DeclarativeContainer):
         "services.user_service.app.services.update_user.UpdateUserService",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="UpdateUserService"
+            logger_name="UserService"
         ),
         session=db_session
     )
