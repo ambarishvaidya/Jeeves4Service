@@ -41,7 +41,7 @@ def verify_token(authorization: HTTPAuthorizationCredentials = Depends(security)
 router = APIRouter()
 
 @router.post("/storage/add-main-storage", response_model=PropertyStorageResponse)
-async def add_main_storage(request: PropertyStorageRequest, current_user: dict = Depends(verify_token)) -> PropertyStorageResponse:
+async def add_main_storage(request: PropertyStorageRequest, auth_token: dict = Depends(verify_token)) -> PropertyStorageResponse:
     """Add main storage (container_id is None)"""
     try:
         # Ensure container_id is None for main storage
@@ -52,7 +52,7 @@ async def add_main_storage(request: PropertyStorageRequest, current_user: dict =
             )
         
         add_main_storage_service = ServiceFactory.get_add_main_storage_service()
-        request.user_id = current_user.get("user_id")
+        request.user_id = auth_token.get("user_id")
         response = add_main_storage_service.add_main_storage(request)
         return response
     except HTTPException:
@@ -61,7 +61,7 @@ async def add_main_storage(request: PropertyStorageRequest, current_user: dict =
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/storage/add-storage", response_model=PropertyStorageResponse)
-async def add_storage(request: PropertyStorageRequest, current_user: dict = Depends(verify_token)) -> PropertyStorageResponse:
+async def add_storage(request: PropertyStorageRequest, auth_token: dict = Depends(verify_token)) -> PropertyStorageResponse:
     """Add storage (container_id is required)"""
     try:
         # Ensure container_id is provided for regular storage
@@ -72,7 +72,7 @@ async def add_storage(request: PropertyStorageRequest, current_user: dict = Depe
             )
         
         add_storage_service = ServiceFactory.get_add_storage_service()
-        request.user_id = current_user.get("user_id")
+        request.user_id = auth_token.get("user_id")
         response = add_storage_service.add_storage(request)
         return response
     except HTTPException:
@@ -81,7 +81,7 @@ async def add_storage(request: PropertyStorageRequest, current_user: dict = Depe
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/storage/property/{property_id}", response_model=list[PropertyStorageResponse])
-async def get_storage_by_property(property_id: int, current_user: dict = Depends(verify_token)) -> list[PropertyStorageResponse]:
+async def get_storage_by_property(property_id: int, auth_token: dict = Depends(verify_token)) -> list[PropertyStorageResponse]:
     """Get all storage for a specific property"""
     try:
         get_storage_service = ServiceFactory.get_get_storage_service()
@@ -91,7 +91,7 @@ async def get_storage_by_property(property_id: int, current_user: dict = Depends
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/storage/room/{room_id}", response_model=list[PropertyStorageResponse])
-async def get_storage_by_room(room_id: int, current_user: dict = Depends(verify_token)) -> list[PropertyStorageResponse]:
+async def get_storage_by_room(room_id: int, auth_token: dict = Depends(verify_token)) -> list[PropertyStorageResponse]:
     """Get all storage for a specific room"""
     try:
         get_storage_service = ServiceFactory.get_get_storage_service()
@@ -101,7 +101,7 @@ async def get_storage_by_room(room_id: int, current_user: dict = Depends(verify_
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/storage/{storage_id}", response_model=PropertyStorageResponse)
-async def get_storage_by_id(storage_id: int, current_user: dict = Depends(verify_token)) -> PropertyStorageResponse:
+async def get_storage_by_id(storage_id: int, auth_token: dict = Depends(verify_token)) -> PropertyStorageResponse:
     """Get a specific storage by its ID"""
     try:
         get_storage_service = ServiceFactory.get_get_storage_service()
