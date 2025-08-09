@@ -1,5 +1,8 @@
 from fastapi import APIRouter, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.params import Depends
 
+from services.shared.j4s_jwt_lib.jwt_processor import JwtTokenProcessor
 from services.property_service.app.di.containers import ServiceFactory
 from services.property_service.app.dto.property import (
     NewPropertyRequest,
@@ -11,13 +14,40 @@ from services.property_service.app.dto.property import (
 
 router = APIRouter()
 
+jwt_token = JwtTokenProcessor(
+    issuer="http://jeeves4service",
+    audience="http://jeeves4service",
+    secret_key="J33v3s4s3rv1c3jeeves4service",
+    expiry_milli_seconds=3600000
+)
+
+security = HTTPBearer()
+
+def verify_token(authorization: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    token = authorization.credentials
+    try:
+        payload = jwt_token.decode_token(token)
+        if "error" in payload:
+            raise HTTPException(
+                status_code=401,
+                detail=payload["error"],
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        return payload
+    except Exception as e:
+        raise HTTPException(
+            status_code=401, 
+            detail="Authorization header is missing",
+            headers={"WWW-Authenticate": "Bearer"}
+        )  
+
 @router.post("/property/add", response_model=PropertyResponse)
 async def add_property(request: NewPropertyRequest) -> PropertyResponse:
     """Add a new property"""
     try:
         add_property_service = ServiceFactory.get_add_property_service()
-        response = add_property_service.add_property(request)
-        return response
+        property_response = add_property_service.add_property(request)
+        return property_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -26,8 +56,8 @@ async def update_property(request: UpdatePropertyRequest) -> PropertyResponse:
     """Update an existing property"""
     try:
         update_property_service = ServiceFactory.get_update_property_service()
-        response = update_property_service.update_property(request)
-        return response
+        property_response = update_property_service.update_property(request)
+        return property_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -36,8 +66,8 @@ async def add_room(request: PropertyRoomRequest) -> RoomResponse:
     """Add a room to a property"""
     try:
         add_rooms_service = ServiceFactory.get_add_rooms_service()
-        response = add_rooms_service.add_room(request)
-        return response
+        room_response = add_rooms_service.add_room(request)
+        return room_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
@@ -46,10 +76,10 @@ async def get_property_by_id(property_id: int) -> PropertyResponse:
     """Get a property by its ID"""
     try:
         get_property_service = ServiceFactory.get_get_property_service()
-        response = get_property_service.get_property_by_id(property_id)
-        if response is None:
+        property_response = get_property_service.get_property_by_id(property_id)
+        if property_response is None:
             raise HTTPException(status_code=404, detail="Property not found")
-        return response
+        return property_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
@@ -58,8 +88,8 @@ async def get_properties(user_id: int) -> list[PropertyResponse]:
     """Get properties associated with a user"""
     try:
         get_property_service = ServiceFactory.get_get_property_service()
-        response = get_property_service.get_properties(user_id)
-        return response
+        property_response = get_property_service.get_properties(user_id)
+        return property_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -68,8 +98,8 @@ async def get_rooms_by_property(property_id: int) -> list[RoomResponse]:
     """Get all rooms for a specific property"""
     try:
         get_rooms_service = ServiceFactory.get_get_rooms_service()
-        response = get_rooms_service.get_rooms_by_property(property_id)
-        return response
+        list_room_response = get_rooms_service.get_rooms_by_property(property_id)
+        return list_room_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -78,9 +108,9 @@ async def get_room_by_id(room_id: int) -> RoomResponse:
     """Get a specific room by its ID"""
     try:
         get_rooms_service = ServiceFactory.get_get_rooms_service()
-        response = get_rooms_service.get_room_by_id(room_id)
-        if response is None:
+        room_response = get_rooms_service.get_room_by_id(room_id)
+        if room_response is None:
             raise HTTPException(status_code=404, detail="Room not found")
-        return response
+        return room_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
