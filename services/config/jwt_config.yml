@@ -1,0 +1,6 @@
+jwt:
+  issuer: "http://jeeves4service"
+  audience: "http://jeeves4service"
+  secret_key: "J33v3s4s3rv1c3jeeves4service"
+  expiry_milliseconds: 3600000
+  algorithm: "HS256"
