@@ -48,6 +48,10 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_schemas=True,
+        include_object=lambda object, name, type_, reflected, compare_to: (
+            object.schema == "property" if type_ == "table" else True
+        ),        
         version_table="alembic_version_property_service",
         version_table_schema="property"
     )
@@ -74,6 +78,10 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection, 
             target_metadata=target_metadata,
+            include_schemas=True,
+            include_object=lambda object, name, type_, reflected, compare_to: (
+                object.schema == "property" if type_ == "table" else True
+            ),
             version_table="alembic_property_service_version",
             version_table_schema="property"
         )
