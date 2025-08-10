@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import Mock
 from services.property_service.app.dto.storage import PropertyStorageRequest, PropertyStorageResponse
 from services.property_service.app.services.add_main_storage import AddMainStorage
-from services.property_service.app.models.storage import Storage
+from services.property_service.app.models.storage import Storage, LocationPath
 
 
 class TestAddMainStorage:
@@ -40,8 +40,9 @@ class TestAddMainStorage:
         assert isinstance(response, PropertyStorageResponse)
         assert "added successfully" in response.message
         assert "Wardrobe1" in response.message
-        self.mock_session.add.assert_called_once()
-        self.mock_session.flush.assert_called_once()
+        # Should be called twice: once for Storage, once for LocationPath
+        assert self.mock_session.add.call_count == 2
+        assert self.mock_session.flush.call_count == 2
         self.mock_session.commit.assert_called_once()
         self.mock_logger.info.assert_called()
     
