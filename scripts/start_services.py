@@ -21,7 +21,8 @@ from pathlib import Path
 def find_virtual_env():
     """Find the virtual environment at the root level."""
     root_dir = Path(__file__).parent
-    
+    print(f"Looking for virtual environment in: {root_dir}")
+
     # Common virtual environment directory names
     venv_names = ['venv', '.venv', 'env', '.env']
     
@@ -134,7 +135,7 @@ def main():
     print("=" * 60)
     
     # Get the root directory
-    root_dir = str(Path(__file__).parent)
+    root_dir = str(Path(__file__).parent.parent)
     print(f"Working directory: {root_dir}")
     
     # Find virtual environment
