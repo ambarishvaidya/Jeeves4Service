@@ -1,5 +1,9 @@
+from ast import Add
+from math import log
 from services.property_service.app.dto.storage import PropertyStorageRequest, PropertyStorageResponse
-from services.property_service.app.models.storage import Storage
+from services.property_service.app.models.property import Property, PropertyRooms
+from services.property_service.app.models.storage import LocationPath, Storage
+
 
 
 class AddMainStorage:
@@ -30,8 +34,23 @@ class AddMainStorage:
             storage_name=storage_request.storage_name.strip()
         )
 
+        property = self.session.query(Property).filter(Property.id == storage_request.property_id).first()
+        room = self.session.query(PropertyRooms).filter(PropertyRooms.id == storage_request.room_id).first()
+        path = f"{property.name} : {room.room_name} : {storage.storage_name}"
+        self.logger.info(f"Location path for main storage: {path}")
+        
+
         try:
             self.session.add(storage)
+            self.session.flush()
+
+            location = LocationPath(
+                property_id=property.id,
+                storage_id=storage.id,
+                location_path=path
+            )
+            self.logger.info(f"Adding location path: {location}")
+            self.session.add(location)
             self.session.flush()
             self.session.commit()
 
