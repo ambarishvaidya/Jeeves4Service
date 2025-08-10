@@ -1,4 +1,7 @@
-from sqlalchemy import Column, Integer, String
+from ast import In
+from re import search
+from sqlalchemy.dialects.postgresql import TSVECTOR
+from sqlalchemy import Column, Integer, String, Index
 from services.inventory_service.app.db.base import Base
 
 
@@ -24,8 +27,11 @@ Operations
 
 '''
 class Household(Base):
-    __tablename__ = "household"
-    __table_args__ = {"schema": "inventory", "extend_existing": True}
+    __tablename__ = "items"
+    __table_args__ = (
+        Index("ix_household_search_idx", "search_vector", postgresql_using="gin"),
+            {"schema": "household", "extend_existing": True}
+        )
 
     id = Column(Integer, primary_key=True, index=True)
     product_name = Column(String, index=True, nullable=True)
@@ -33,6 +39,7 @@ class Household(Base):
     quantity = Column(Integer, nullable=True)
     storage_id = Column(Integer)
     property_id = Column(Integer, index=True)
+    search_vector = Column(TSVECTOR) 
 
 
 '''
