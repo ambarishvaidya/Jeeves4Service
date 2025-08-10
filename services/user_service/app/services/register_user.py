@@ -109,20 +109,3 @@ class RegisterUserService:
             raise ValueError("Last name cannot be empty")
         
         # Additional validation logic can be added here
-
-
-# Legacy function for backward compatibility
-def register_user(request: RegisterUserRequest, session, logger=None) -> RegisterUserResponse:
-    """Legacy function wrapper - deprecated, use RegisterUserService instead"""
-    from services.user_service.app.di.containers import ServiceFactory
-    
-    service = ServiceFactory.get_register_user_service()
-    return service.register_user(request)
-
-
-def validate_user_inputs(request: RegisterUserRequest):
-    """Legacy function wrapper - deprecated, use RegisterUserService._validate_user_inputs instead"""
-    from services.user_service.app.di.containers import ServiceFactory
-    
-    service = ServiceFactory.get_register_user_service()
-    return service._validate_user_inputs(request)    
