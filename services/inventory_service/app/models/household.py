@@ -1,6 +1,4 @@
-from tokenize import String
-from psycopg2 import Date
-from sqlalchemy import Column, Integer
+from sqlalchemy import Column, Integer, String
 from services.inventory_service.app.db.base import Base
 
 
@@ -31,7 +29,7 @@ class Household(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     product_name = Column(String, index=True, nullable=True)
-    general_name = Column(String, index=True, nullable=True)
+    general_name = Column(String, index=True, nullable=False)
     quantity = Column(Integer, nullable=True)
     storage_id = Column(Integer)
     property_id = Column(Integer, index=True)
