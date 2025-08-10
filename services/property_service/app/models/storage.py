@@ -19,3 +19,14 @@ class Storage(Base):
     container_id = Column(Integer, nullable=True)
     storage_name = Column(String, index=True, nullable=False)    
     
+'''
+When a new storage item is created, its location path will be recorded.
+'''    
+class LocationPath(Base):
+    __tablename__ = "location_path"
+    __table_args__ = {"schema": "property", "extend_existing": True}
+
+    id = Column(Integer, primary_key=True, index=True)
+    property_id = Column(Integer, ForeignKey("property.location.id"), nullable=False)
+    storage_id = Column(Integer, ForeignKey("property.storage.id"), nullable=False) 
+    location_path = Column(String, index=True, nullable=False)

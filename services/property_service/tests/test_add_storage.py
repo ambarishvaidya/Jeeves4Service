@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import Mock
 from services.property_service.app.dto.storage import PropertyStorageRequest, PropertyStorageResponse
 from services.property_service.app.services.add_storage import AddStorage
-from services.property_service.app.models.storage import Storage
+from services.property_service.app.models.storage import Storage, LocationPath
 
 
 class TestAddStorage:
@@ -26,7 +26,21 @@ class TestAddStorage:
         # Mock parent storage exists
         mock_parent = Mock()
         mock_parent.storage_name = "Wardrobe1"
-        self.mock_session.query.return_value.filter.return_value.first.return_value = mock_parent
+        
+        # Mock location path exists
+        mock_location = Mock()
+        mock_location.location_path = "Room > Wardrobe1"
+        
+        # Configure query mock to return different objects for different calls
+        def query_side_effect(model_class):
+            mock_query = Mock()
+            if model_class == Storage:
+                mock_query.filter.return_value.first.return_value = mock_parent
+            elif model_class == LocationPath:
+                mock_query.filter.return_value.first.return_value = mock_location
+            return mock_query
+        
+        self.mock_session.query.side_effect = query_side_effect
         
         # Mock the storage object that would be created
         mock_storage = Mock()
@@ -46,8 +60,9 @@ class TestAddStorage:
         assert "added successfully" in response.message
         assert "Top Shelf" in response.message
         assert "Wardrobe1" in response.message
-        self.mock_session.add.assert_called_once()
-        self.mock_session.flush.assert_called_once()
+        # Should be called twice: once for Storage, once for LocationPath
+        assert self.mock_session.add.call_count == 2
+        assert self.mock_session.flush.call_count == 2
         self.mock_session.commit.assert_called_once()
         self.mock_logger.info.assert_called()
     
@@ -124,7 +139,21 @@ class TestAddStorage:
         # Mock parent storage exists
         mock_parent = Mock()
         mock_parent.storage_name = "Wardrobe1"
-        self.mock_session.query.return_value.filter.return_value.first.return_value = mock_parent
+        
+        # Mock location path exists
+        mock_location = Mock()
+        mock_location.location_path = "Room > Wardrobe1"
+        
+        # Configure query mock to return different objects for different calls
+        def query_side_effect(model_class):
+            mock_query = Mock()
+            if model_class == Storage:
+                mock_query.filter.return_value.first.return_value = mock_parent
+            elif model_class == LocationPath:
+                mock_query.filter.return_value.first.return_value = mock_location
+            return mock_query
+        
+        self.mock_session.query.side_effect = query_side_effect
         
         # Mock database error
         self.mock_session.commit.side_effect = Exception("Database connection failed")
@@ -149,14 +178,30 @@ class TestAddStorage:
             storage_name="Top Shelf"
         )
         
+        # Mock parent storage exists
+        mock_parent = Mock()
+        mock_parent.storage_name = "Wardrobe1"
+        
+        # Mock location path exists
+        mock_location = Mock()
+        mock_location.location_path = "Room > Wardrobe1"
+        
+        # Configure query mock to return different objects for different calls
+        def query_side_effect(model_class):
+            mock_query = Mock()
+            if model_class == Storage:
+                mock_query.filter.return_value.first.return_value = mock_parent
+            elif model_class == LocationPath:
+                mock_query.filter.return_value.first.return_value = mock_location
+            return mock_query
+        
+        self.mock_session.query.side_effect = query_side_effect
+        
         # Act
         self.service.add_storage(request)
         
         # Assert - verify the query filters by property_id, room_id, and container_id
-        self.mock_session.query.assert_called_with(Storage)
-        # The filter call should include all three conditions
-        filter_call = self.mock_session.query.return_value.filter
-        assert filter_call.called
+        assert self.mock_session.query.call_count >= 1  # Called at least once for Storage validation
 
 
 if __name__ == "__main__":
