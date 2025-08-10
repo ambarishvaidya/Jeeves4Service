@@ -48,9 +48,13 @@ def run_migrations_offline() -> None:
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
+        include_schemas=True,
+            include_object=lambda object, name, type_, reflected, compare_to: (
+                object.schema == "household" if type_ == "table" else True
+            ),
         dialect_opts={"paramstyle": "named"},
         version_table="alembic_version_inventory_service",
-        version_table_schema="inventory"
+        version_table_schema="household"
     )
 
     with context.begin_transaction():
@@ -73,9 +77,14 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata,
+            connection=connection, 
+            target_metadata=target_metadata,
+            include_schemas=True,
+            include_object=lambda object, name, type_, reflected, compare_to: (
+                object.schema == "household" if type_ == "table" else True
+            ),
             version_table="alembic_version_inventory_service",
-            version_table_schema="inventory"
+            version_table_schema="household"
         )
 
         with context.begin_transaction():
