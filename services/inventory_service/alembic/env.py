@@ -8,6 +8,7 @@ from alembic import context
 
 from services.inventory_service.app.config import DATABASE_URL
 from services.inventory_service.app.db.base import Base
+from services.inventory_service.app.models import household
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
