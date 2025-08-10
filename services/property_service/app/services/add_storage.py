@@ -1,5 +1,5 @@
 from services.property_service.app.dto.storage import PropertyStorageRequest, PropertyStorageResponse
-from services.property_service.app.models.storage import Storage
+from services.property_service.app.models.storage import LocationPath, Storage
 
 
 class AddStorage:
@@ -42,8 +42,26 @@ class AddStorage:
             storage_name=storage_request.storage_name.strip()
         )
 
+        self.logger.info(f"Creating storage: {storage}")
+
+        current_location_path = self.session.query(LocationPath).filter(
+            LocationPath.property_id == storage_request.property_id,
+            LocationPath.storage_id == storage_request.container_id
+            ).first().location_path + " : " + storage.storage_name.strip()
+
+        self.logger.info(f"Location path for sub-storage: {current_location_path}")
+
         try:
             self.session.add(storage)
+            self.session.flush()
+
+            location = LocationPath(
+                property_id=storage_request.property_id,
+                storage_id=storage.id,
+                location_path=current_location_path
+            )
+
+            self.session.add(location)
             self.session.flush()
             self.session.commit()
 
