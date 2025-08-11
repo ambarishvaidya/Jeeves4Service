@@ -59,7 +59,7 @@ def get_service_info():
         ,
         {
             'name': 'Household Service',
-            'module': 'services.inventory_service.main:app',
+            'module': 'services.household_service.main:app',
             'port': 8002,
             'log_file': 'household_service.log',
             'docs_url': 'http://localhost:8002/docs'

@@ -3,7 +3,7 @@ import logging
 from services.shared.j4s_logging_lib.j4s_logger import configure_logging
 from dependency_injector import containers, providers
 
-from services.inventory_service.app.db.session import SessionLocal
+from services.household_service.app.db.session import SessionLocal
 
 
 class LoggerFactory:
@@ -21,7 +21,7 @@ class Container(containers.DeclarativeContainer):
     db_session = providers.Factory(SessionLocal)
 
     create_add_item_service = providers.Factory(
-        "services.inventory_service.app.services.add_item.AddItem",
+        "services.household_service.app.services.add_item.AddItem",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
             logger_name="InventoryService"

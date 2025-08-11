@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from services.shared.j4s_utilities.jwt_helper import jwt_helper
-from services.inventory_service.app.di.containers import ServiceFactory
-from services.inventory_service.app.dto.household import AddHouseholdItemDTO, HouseholdItemResponseDTO
+from services.household_service.app.di.containers import ServiceFactory
+from services.household_service.app.dto.household import AddHouseholdItemDTO, HouseholdItemResponseDTO
 
 
 router = APIRouter()

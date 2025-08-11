@@ -1,8 +1,8 @@
 """Main entry point for the user service FastAPI application"""
 
 from fastapi import FastAPI
-from services.inventory_service.routes.household import router as household_router
-from services.inventory_service.app.di.containers import Container
+from services.household_service.routes.household import router as household_router
+from services.household_service.app.di.containers import Container
 
 # Create FastAPI instance
 app = FastAPI(
@@ -32,11 +32,11 @@ async def root():
 # Health check endpoint
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "service": "inventory_service"}
+    return {"status": "healthy", "service": "household_service"}
 
 # Entry point for running the server
 if __name__ == "__main__":
     import uvicorn
     print("Starting Inventory Service API...")
     print("Swagger documentation will be available at: http://localhost:8002/docs")
-    uvicorn.run("services.inventory_service.main:app", host="0.0.0.0", port=8002, reload=True)
+    uvicorn.run("services.household_service.main:app", host="0.0.0.0", port=8002, reload=True)

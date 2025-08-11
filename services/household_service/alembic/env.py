@@ -6,9 +6,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from services.inventory_service.app.config import DATABASE_URL
-from services.inventory_service.app.db.base import Base
-from services.inventory_service.app.models import household
+from services.household_service.app.config import DATABASE_URL
+from services.household_service.app.db.base import Base
+from services.household_service.app.models import household
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -53,7 +53,7 @@ def run_migrations_offline() -> None:
                 object.schema == "household" if type_ == "table" else True
             ),
         dialect_opts={"paramstyle": "named"},
-        version_table="alembic_version_inventory_service",
+        version_table="alembic_version_household_service",
         version_table_schema="household"
     )
 
@@ -83,7 +83,7 @@ def run_migrations_online() -> None:
             include_object=lambda object, name, type_, reflected, compare_to: (
                 object.schema == "household" if type_ == "table" else True
             ),
-            version_table="alembic_version_inventory_service",
+            version_table="alembic_version_household_service",
             version_table_schema="household"
         )
 

@@ -2,7 +2,7 @@ from ast import In
 from re import search
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy import Column, Integer, String, Index
-from services.inventory_service.app.db.base import Base
+from services.household_service.app.db.base import Base
 
 
 '''

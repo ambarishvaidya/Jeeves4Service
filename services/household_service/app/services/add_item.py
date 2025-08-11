@@ -1,6 +1,6 @@
 from sqlalchemy import func
-from services.inventory_service.app.dto.household import AddHouseholdItemDTO, HouseholdItemResponseDTO
-from services.inventory_service.app.models.household import Household
+from services.household_service.app.dto.household import AddHouseholdItemDTO, HouseholdItemResponseDTO
+from services.household_service.app.models.household import Household
 
 
 class AddItem:
