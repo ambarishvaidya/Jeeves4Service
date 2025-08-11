@@ -56,6 +56,14 @@ def get_service_info():
             'log_file': 'property_service.log',
             'docs_url': 'http://localhost:8001/docs'
         }
+        ,
+        {
+            'name': 'Household Service',
+            'module': 'services.household_service.main:app',
+            'port': 8002,
+            'log_file': 'household_service.log',
+            'docs_url': 'http://localhost:8002/docs'
+        }
     ]
 
 
