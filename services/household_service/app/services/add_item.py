@@ -12,13 +12,16 @@ class AddItem:
     def add_household_item(self, request: AddHouseholdItemDTO) -> HouseholdItemResponseDTO:
         self.logger.info(f"Adding household item with request: {request}")
         try:
+            # Handle search vector creation when product_name might be None
+            search_text = (request.product_name or '') + ' ' + request.general_name
+            
             household_item  = Household(
                 product_name=request.product_name,
                 general_name=request.general_name,
                 quantity=request.quantity,
                 storage_id=request.storage_id,
                 property_id=request.property_id,
-                search_vector=func.to_tsvector('english', request.product_name + ' ' + request.general_name)
+                search_vector=func.to_tsvector('english', search_text)
             )
             
             self.logger.info(f"Creating household item: {household_item}")
@@ -31,7 +34,7 @@ class AddItem:
         except Exception as e:
             self.session.rollback()
             self.logger.error(f"Error adding household item: {e}")
-            return HouseholdItemResponseDTO(is_success=False, error=str(e))
+            return HouseholdItemResponseDTO(is_success=False, err=str(e))
         
         finally:
             if self.session:
