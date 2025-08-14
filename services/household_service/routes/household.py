@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from services.shared.j4s_utilities.jwt_helper import jwt_helper
 from services.household_service.app.di.containers import ServiceFactory
-from services.household_service.app.dto.household import AddHouseholdItemDTO, HouseholdItemResponseDTO
+from services.household_service.app.dto.household import AddHouseholdItemDTO, HouseholdItemResponseDTO, SearchHouseholdItemResponseDTO, SearchHouseholdItemResponseDTO
 
 
 router = APIRouter()
@@ -16,3 +16,11 @@ async def add_household_item(request: AddHouseholdItemDTO, auth_token: dict = De
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/household/find/{item}", response_model=SearchHouseholdItemResponseDTO)
+async def find_household_item(item: str, auth_token: dict = Depends(jwt_helper.verify_token)):
+    try:
+        find_item_service = ServiceFactory.get_find_item_service()
+        response = find_item_service.find_household_item(item)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

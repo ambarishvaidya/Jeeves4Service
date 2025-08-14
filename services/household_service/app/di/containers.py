@@ -24,7 +24,16 @@ class Container(containers.DeclarativeContainer):
         "services.household_service.app.services.add_item.AddItem",
         logger=providers.Factory(
             LoggerFactory.create_logger_for,
-            logger_name="InventoryService"
+            logger_name="HouseholdService"
+        ),
+        session=db_session
+    )
+
+    create_find_item_service = providers.Factory(
+        "services.household_service.app.services.find_item.FindItem",
+        logger=providers.Factory(
+            LoggerFactory.create_logger_for,
+            logger_name="HouseholdService"
         ),
         session=db_session
     )
@@ -46,3 +55,8 @@ class ServiceFactory:
     def get_add_item_service(cls):
        """Get the add item service instance"""
        return cls.get_container().create_add_item_service()
+
+    @classmethod
+    def get_find_item_service(cls):
+       """Get the find item service instance"""
+       return cls.get_container().create_find_item_service()
