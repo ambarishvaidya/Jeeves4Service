@@ -37,6 +37,7 @@ class SearchHouseholdItemDTO(BaseModel):
     search_product: str
 
 class HouseholdItemDTO(BaseModel):
+    id: Optional[int] = -1
     product_name: Optional[str] = None
     general_name: str
     quantity: Optional[int] = 1
