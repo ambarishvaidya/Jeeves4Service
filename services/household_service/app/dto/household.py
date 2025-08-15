@@ -28,15 +28,12 @@ class HouseholdItemResponseDTO(BaseModel):
 class DeleteHouseholdItemDTO(BaseModel):
     id: int
 
-class DeleteHouseholdItemResponseDTO(BaseModel):
-    success: bool
-    message: Optional[str] = None
-
 class SearchHouseholdItemDTO(BaseModel):
     property_id: int
     search_product: str
 
 class HouseholdItemDTO(BaseModel):
+    id: Optional[int] = -1
     product_name: Optional[str] = None
     general_name: str
     quantity: Optional[int] = 1
