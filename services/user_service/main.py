@@ -1,8 +1,14 @@
+
 """Main entry point for the user service FastAPI application"""
 
 from fastapi import FastAPI
 from services.user_service.routes.users import router as users_router
 from services.user_service.app.di.containers import Container
+import debugpy
+
+debugpy.listen(("0.0.0.0", 5678))  # Use a unique port per service
+print("🔍 Waiting for debugger to attach...")
+
 
 # Create FastAPI instance
 app = FastAPI(

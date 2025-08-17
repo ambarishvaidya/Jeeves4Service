@@ -4,6 +4,10 @@ from fastapi import FastAPI
 from services.property_service.routes.property import router as property_router
 from services.property_service.routes.storage import router as storage_router
 from services.property_service.app.di.containers import Container
+import debugpy
+
+debugpy.listen(("0.0.0.0", 5679))  # Use a unique port per service
+print("🔍 Waiting for debugger to attach...")
 
 # Create FastAPI instance
 app = FastAPI(
