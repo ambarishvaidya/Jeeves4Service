@@ -2,8 +2,10 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import APIRouter, HTTPException, Response, Depends, Header
 from typing import Optional
 
+from h11 import Request
 from yaml import Token
 
+from services.shared.request_context import RequestContext
 from services.shared.j4s_utilities.jwt_helper import jwt_helper
 from services.shared.j4s_utilities.token_models import TokenPayload
 from services.shared.j4s_jwt_lib.jwt_processor import JwtTokenProcessor
@@ -40,8 +42,9 @@ async def authenticate_user(email: str, password: str, response: Response) -> Au
             is_admin=auth_response.is_admin,
             properties=user_properties
         )
-        
-        response.headers["Authorization"] = f"Bearer {jwt_helper.generate_token(payload)}"
+        token = jwt_helper.generate_token(payload)
+        RequestContext.set_token(payload)
+        response.headers["Authorization"] = f"Bearer {token}"
         return auth_response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
