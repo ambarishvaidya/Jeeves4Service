@@ -16,6 +16,7 @@ import pytest
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError, DatabaseError
 
+from services.shared.request_context import RequestContext
 from services.household_service.app.services.find_item import FindItem
 from services.household_service.app.dto.household import HouseholdItemDTO, SearchHouseholdItemResponseDTO
 from services.household_service.app.models.household import Household
@@ -162,7 +163,11 @@ class TestFindItem:
             
             # Mock session close
             self.mock_session.close = Mock()
-        
+
+            mock_payload = Mock()
+            mock_payload.get_property_ids.return_value = [201, 202]
+            RequestContext.set_token(mock_payload)
+
         # Act
         result = self.service.find_household_item(search_term)
         
@@ -237,6 +242,10 @@ class TestFindItem:
             mock_execute_result.scalars.return_value.all.return_value = [mock_household]
             self.mock_session.execute.return_value = mock_execute_result
             
+            mock_payload = Mock()
+            mock_payload.get_property_ids.return_value = [201, 202]
+            RequestContext.set_token(mock_payload)
+
             # Mock location not found
             self.mock_session.query.return_value.filter.return_value.first.return_value = None
             self.mock_session.close = Mock()
@@ -278,6 +287,10 @@ class TestFindItem:
             self.mock_session.execute.side_effect = SQLAlchemyError("Database connection failed")
             self.mock_session.rollback = Mock()
             self.mock_session.close = Mock()
+
+            mock_payload = Mock()
+            mock_payload.get_property_ids.return_value = [201, 202]
+            RequestContext.set_token(mock_payload)
         
         # Act
         result = self.service.find_household_item(search_term)
@@ -317,6 +330,10 @@ class TestFindItem:
             mock_execute_result.scalars.return_value.all.return_value = [mock_household1, mock_household2]
             self.mock_session.execute.return_value = mock_execute_result
             
+            mock_payload = Mock()
+            mock_payload.get_property_ids.return_value = [201, 202]
+            RequestContext.set_token(mock_payload)
+
             # Mock location for the good item
             mock_location = Mock(spec=LocationPath)
             mock_location.location_path = "Test Location"
@@ -363,6 +380,9 @@ class TestFindItem:
         
         with patch.object(self.service, 'lemmatize_text', side_effect=RuntimeError("Unexpected error")):
             self.mock_session.close = Mock()
+            mock_payload = Mock()
+            mock_payload.get_property_ids.return_value = [201, 202]
+            RequestContext.set_token(mock_payload)
         
         # Act
         result = self.service.find_household_item(search_term)
@@ -382,8 +402,13 @@ class TestFindItem:
             # Mock empty results for simplicity
             mock_execute_result = Mock()
             mock_execute_result.scalars.return_value.all.return_value = []
+
+            mock_payload = Mock()
+            mock_payload.get_property_ids.return_value = [201, 202]
+            RequestContext.set_token(mock_payload)
+
             self.mock_session.execute.return_value = mock_execute_result
-            self.mock_session.close = Mock()
+            self.mock_session.close = Mock()            
         
         # Act
         result = self.service.find_household_item(search_term)
@@ -440,6 +465,11 @@ class TestFindItem:
             # Mock empty results for simplicity
             mock_execute_result = Mock()
             mock_execute_result.scalars.return_value.all.return_value = []
+
+            mock_payload = Mock()
+            mock_payload.get_property_ids.return_value = [201, 202]
+            RequestContext.set_token(mock_payload)
+            
             self.mock_session.execute.return_value = mock_execute_result
             self.mock_session.close = Mock()
         
