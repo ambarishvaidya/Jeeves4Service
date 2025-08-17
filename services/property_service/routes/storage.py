@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from services.shared.request_context import RequestContext
 from services.shared.j4s_utilities.jwt_helper import jwt_helper
 from services.shared.j4s_utilities.token_models import TokenPayload
 from services.shared.j4s_jwt_lib.jwt_processor import JwtTokenProcessor
@@ -14,9 +15,10 @@ router = APIRouter()
 
 
 @router.post("/storage/add-main-storage", response_model=PropertyStorageResponse)
-async def add_main_storage(request: PropertyStorageRequest, auth_token: dict = Depends(jwt_helper.verify_token)) -> PropertyStorageResponse:
+async def add_main_storage(request: PropertyStorageRequest, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> PropertyStorageResponse:
     """Add main storage (container_id is None)"""
     try:
+        RequestContext.set_token(auth_token)
         # Ensure container_id is None for main storage
         if request.container_id is not None:
             raise HTTPException(
@@ -33,9 +35,10 @@ async def add_main_storage(request: PropertyStorageRequest, auth_token: dict = D
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/storage/add-storage", response_model=PropertyStorageResponse)
-async def add_storage(request: PropertyStorageRequest, auth_token: dict = Depends(jwt_helper.verify_token)) -> PropertyStorageResponse:
+async def add_storage(request: PropertyStorageRequest, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> PropertyStorageResponse:
     """Add storage (container_id is required)"""
     try:
+        RequestContext.set_token(auth_token)
         # Ensure container_id is provided for regular storage
         if request.container_id is None:
             raise HTTPException(
@@ -52,9 +55,10 @@ async def add_storage(request: PropertyStorageRequest, auth_token: dict = Depend
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/storage/property/{property_id}", response_model=list[PropertyStorageResponse])
-async def get_storage_by_property(property_id: int, auth_token: dict = Depends(jwt_helper.verify_token)) -> list[PropertyStorageResponse]:
+async def get_storage_by_property(property_id: int, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> list[PropertyStorageResponse]:
     """Get all storage for a specific property"""
     try:
+        RequestContext.set_token(auth_token)
         get_storage_service = ServiceFactory.get_get_storage_service()
         response = get_storage_service.get_storage_by_property(property_id)
         return response
@@ -62,9 +66,10 @@ async def get_storage_by_property(property_id: int, auth_token: dict = Depends(j
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/storage/room/{room_id}", response_model=list[PropertyStorageResponse])
-async def get_storage_by_room(room_id: int, auth_token: dict = Depends(jwt_helper.verify_token)) -> list[PropertyStorageResponse]:
+async def get_storage_by_room(room_id: int, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> list[PropertyStorageResponse]:
     """Get all storage for a specific room"""
     try:
+        RequestContext.set_token(auth_token)
         get_storage_service = ServiceFactory.get_get_storage_service()
         response = get_storage_service.get_storage_by_room(room_id)
         return response
@@ -72,9 +77,10 @@ async def get_storage_by_room(room_id: int, auth_token: dict = Depends(jwt_helpe
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/storage/{storage_id}", response_model=PropertyStorageResponse)
-async def get_storage_by_id(storage_id: int, auth_token: dict = Depends(jwt_helper.verify_token)) -> PropertyStorageResponse:
+async def get_storage_by_id(storage_id: int, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> PropertyStorageResponse:
     """Get a specific storage by its ID"""
     try:
+        RequestContext.set_token(auth_token)
         get_storage_service = ServiceFactory.get_get_storage_service()
         response = get_storage_service.get_storage_by_id(storage_id)
         if response is None:
