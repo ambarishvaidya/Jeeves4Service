@@ -7,6 +7,7 @@ from yaml import Token
 from services.shared.j4s_utilities.jwt_helper import jwt_helper
 from services.shared.j4s_utilities.token_models import TokenPayload
 from services.shared.j4s_jwt_lib.jwt_processor import JwtTokenProcessor
+from services.shared.clients.property_service_client import property_client
 from services.user_service.app.di.containers import ServiceFactory
 from services.user_service.app.dto.registration import RegisterUserResponse, RegisterUserRequest
 from services.user_service.app.dto.user import AuthenticateUserResponse, ChangePasswordRequest, ChangePasswordResponse, InviteUser
@@ -29,10 +30,15 @@ async def authenticate_user(email: str, password: str, response: Response) -> Au
         auth_service = ServiceFactory.get_authenticate_user_service()
         auth_response = auth_service.authenticate(email, password)
         
+        # Fetch user's properties for JWT claims
+        user_properties = property_client.get_user_properties_sync(auth_response.user_id)
+        
         payload = TokenPayload(
             user_id=auth_response.user_id,
             username=auth_response.email,
-            trace_id=auth_response.session_id
+            trace_id=auth_response.session_id,
+            is_admin=auth_response.is_admin,
+            properties=user_properties
         )
         
         response.headers["Authorization"] = f"Bearer {jwt_helper.generate_token(payload)}"
