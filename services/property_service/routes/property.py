@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException, Depends, Response, Header, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import List
 
+from services.shared.request_context import RequestContext
 from services.shared.j4s_utilities.jwt_helper import jwt_helper
 from services.shared.j4s_utilities.token_models import TokenPayload
 from services.shared.j4s_jwt_lib.jwt_processor import JwtTokenProcessor
@@ -34,9 +35,10 @@ def _log_internal_access(user_id: int, requester_ip: str):
 router = APIRouter()
 
 @router.post("/property/add", response_model=PropertyResponse)
-async def add_property(request: NewPropertyRequest, auth_token: dict = Depends(jwt_helper.verify_token)) -> PropertyResponse:
+async def add_property(request: NewPropertyRequest, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> PropertyResponse:
     """Add a new property"""
     try:
+        RequestContext.set_token(auth_token)
         add_property_service = ServiceFactory.get_add_property_service()
         request.created_by = auth_token.user_id
         property_response = add_property_service.add_property(request)
@@ -45,9 +47,10 @@ async def add_property(request: NewPropertyRequest, auth_token: dict = Depends(j
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/property/update", response_model=PropertyResponse)
-async def update_property(request: UpdatePropertyRequest, auth_token: dict = Depends(jwt_helper.verify_token)) -> PropertyResponse:
+async def update_property(request: UpdatePropertyRequest, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> PropertyResponse:
     """Update an existing property"""
     try:
+        RequestContext.set_token(auth_token)
         update_property_service = ServiceFactory.get_update_property_service()
         property_response = update_property_service.update_property(request)
         return property_response
@@ -55,9 +58,10 @@ async def update_property(request: UpdatePropertyRequest, auth_token: dict = Dep
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/rooms/add", response_model=RoomResponse)
-async def add_room(request: PropertyRoomRequest, auth_token: dict = Depends(jwt_helper.verify_token)) -> RoomResponse:
+async def add_room(request: PropertyRoomRequest, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> RoomResponse:
     """Add a room to a property"""
     try:
+        RequestContext.set_token(auth_token)
         add_rooms_service = ServiceFactory.get_add_rooms_service()
         room_response = add_rooms_service.add_room(request)
         return room_response
@@ -65,9 +69,10 @@ async def add_room(request: PropertyRoomRequest, auth_token: dict = Depends(jwt_
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.get("/property/{property_id}", response_model=PropertyResponse)
-async def get_property_by_id(property_id: int, auth_token: dict = Depends(jwt_helper.verify_token)) -> PropertyResponse:
+async def get_property_by_id(property_id: int, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> PropertyResponse:
     """Get a property by its ID"""
     try:
+        RequestContext.set_token(auth_token)
         get_property_service = ServiceFactory.get_get_property_service()
         property_response = get_property_service.get_property_by_id(property_id)
         if property_response is None:
@@ -122,9 +127,10 @@ async def get_user_properties_for_claims(
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/properties/", response_model=list[PropertyResponse])
-async def get_properties(auth_token: dict = Depends(jwt_helper.verify_token)) -> list[PropertyResponse]:
+async def get_properties(auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> list[PropertyResponse]:
     """Get properties associated with a user"""
     try:
+        RequestContext.set_token(auth_token)
         get_property_service = ServiceFactory.get_get_property_service()
         property_response = get_property_service.get_properties(auth_token.user_id)
         return property_response
@@ -132,9 +138,10 @@ async def get_properties(auth_token: dict = Depends(jwt_helper.verify_token)) ->
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/rooms/property/{property_id}", response_model=list[RoomResponse])
-async def get_rooms_by_property(property_id: int, auth_token: dict = Depends(jwt_helper.verify_token)) -> list[RoomResponse]:
+async def get_rooms_by_property(property_id: int, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> list[RoomResponse]:
     """Get all rooms for a specific property"""
     try:
+        RequestContext.set_token(auth_token)
         get_rooms_service = ServiceFactory.get_get_rooms_service()
         list_room_response = get_rooms_service.get_rooms_by_property(property_id)
         return list_room_response
@@ -142,9 +149,10 @@ async def get_rooms_by_property(property_id: int, auth_token: dict = Depends(jwt
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/rooms/{room_id}", response_model=RoomResponse)
-async def get_room_by_id(room_id: int, auth_token: dict = Depends(jwt_helper.verify_token)) -> RoomResponse:
+async def get_room_by_id(room_id: int, auth_token: TokenPayload = Depends(jwt_helper.verify_token)) -> RoomResponse:
     """Get a specific room by its ID"""
     try:
+        RequestContext.set_token(auth_token)
         get_rooms_service = ServiceFactory.get_get_rooms_service()
         room_response = get_rooms_service.get_room_by_id(room_id)
         if room_response is None:

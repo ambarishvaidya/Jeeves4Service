@@ -50,9 +50,9 @@ async def authenticate_user(email: str, password: str, response: Response) -> Au
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.post("/users/change-password", response_model=ChangePasswordResponse)
-async def change_password( request: ChangePasswordRequest, auth_token: dict = Depends(jwt_helper.verify_token) ) -> ChangePasswordResponse:
+async def change_password( request: ChangePasswordRequest, auth_token: TokenPayload = Depends(jwt_helper.verify_token) ) -> ChangePasswordResponse:
     try:
-        
+        RequestContext.set_token(auth_token)
         change_password_service = ServiceFactory.get_change_password_service()
         request.user_id = auth_token.user_id
         response = change_password_service.change_password(request)
