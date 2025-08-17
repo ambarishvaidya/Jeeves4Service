@@ -32,7 +32,7 @@ class TestJwtTokenProcessor:
         assert processor.issuer == "test"
         assert processor.audience == "test"
         assert processor.secret_key == "test"
-        assert processor.expiry_milli_seconds == 3600  # Default value
+        assert processor.expiry_milli_seconds == 3600000  # Default value
     
     def test_init_with_custom_expiry(self):
         """Test initialization with custom expiry time."""
