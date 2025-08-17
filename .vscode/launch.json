@@ -10,6 +10,26 @@
       "cwd": "${workspaceFolder}",
       "env": {"PYTHONPATH": "${workspaceFolder}"},
       "justMyCode": true      
+    },
+    {
+      "name": "Attach to UserService",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "justMyCode": true
+    },
+        {
+      "name": "Attach to PropertyService",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5679
+      },
+      "justMyCode": true
     }
   ]
 }

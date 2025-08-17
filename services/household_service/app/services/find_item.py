@@ -1,7 +1,9 @@
+from operator import and_
 from turtle import st
 import spacy
-from sqlalchemy import func, or_, select, desc
+from sqlalchemy import func, or_, and_, select, desc
 from sqlalchemy.exc import SQLAlchemyError, DatabaseError
+from services.shared.request_context import RequestContext
 from services.household_service.app.dto.household import HouseholdItemDTO, SearchHouseholdItemResponseDTO
 from services.household_service.app.models.household import Household
 from services.property_service.app.models.storage import LocationPath, LocationPath, Storage
@@ -45,6 +47,8 @@ class FindItem:
         """Find household items based on search term with comprehensive logging and error handling"""
         self.logger.info(f"Starting household item search with term: '{search_term}'")
         
+        token_payload = RequestContext.get_token()
+        
         # Input validation
         if not search_term or not search_term.strip():
             self.logger.warning("Empty or invalid search term provided")
@@ -61,24 +65,40 @@ class FindItem:
 
             # Step 2: Query construction
             self.logger.debug("Step 2: Constructing database query")
+            
+            # Get user's accessible property IDs from token
+            accessible_property_ids = []
+            if token_payload:
+                accessible_property_ids = token_payload.get_property_ids()
+                self.logger.debug(f"User has access to properties: {accessible_property_ids}")
+            
+            # If user has no accessible properties, return empty results
+            if not accessible_property_ids:
+                self.logger.warning("User has no accessible properties, returning empty results")
+                return SearchHouseholdItemResponseDTO(items=[])
+            
             query = (
                     select(
                         Household,
                         func.ts_rank(Household.search_vector, func.to_tsquery('english', lemmatized_item)).label('rank')
                     )
                     .where(
-                        or_(
-                            Household.search_vector.op('@@')(func.to_tsquery('english', lemmatized_item)),
-                            Household.product_name.ilike(f'%{search_term}%'),
-                            Household.general_name.ilike(f'%{search_term}%'),
-                            # func.similarity(Household.product_name, search_term) > 0.3,
-                            # func.similarity(Household.general_name, search_term) > 0.3
+                        and_(
+                            # Filter by user's accessible properties
+                            Household.property_id.in_(accessible_property_ids),
+                            # Search conditions
+                            or_(
+                                Household.search_vector.op('@@')(func.to_tsquery('english', lemmatized_item)),
+                                Household.product_name.ilike(f'%{search_term}%'),
+                                Household.general_name.ilike(f'%{search_term}%'),
+                                # func.similarity(Household.product_name, search_term) > 0.3,
+                                # func.similarity(Household.general_name, search_term) > 0.3                        
+                            )
                         )
                     )
                     .order_by(desc("rank"))
                     .limit(10)
                 )
-            
             self.logger.debug("Database query constructed successfully")
 
             # Step 3: Execute query
